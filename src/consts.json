@@ -1,0 +1,108 @@
+{
+    "shops": {        
+        "https://az-med.ru/": {
+            "columnNumber": 2,
+            "selectorName": "#pagetitle",
+            "selectorPrice": ".price_matrix_block .price_value"
+        },
+        "https://medtehnika1.ru/": {
+            "columnNumber": 4,
+            "selectorName": "h1[itemprop]",
+            "selectorPrice": "[itemprop='price']"
+        },
+        "https://gradusnik.ru/": {
+            "columnNumber": 6,
+            "selectorName": "h1",
+            "selectorPrice": "[itemprop='price']"
+        },
+        "https://esculap.su/": {
+            "columnNumber": 8,
+            "selectorName": "[itemprop='name']",
+            "selectorPrice": "#product-content .price .woocommerce-Price-amount"
+        },
+        "https://www.med-magazin.ru": {
+            "columnNumber": 10,
+            "selectorName": ".title h1",
+            "selectorPrice": ".price.is-discount"
+        },
+        "https://sims2.ru": {
+            "columnNumber": 12,
+            "selectorName": "div.bold-lg-title",
+            "selectorPrice": "#compare-price"
+        },
+        "https://ortonica.ru": {
+            "columnNumber": 14,
+            "selectorName": ".wrapper_inner h1",
+            "selectorPrice": ".prices .price"
+        },
+        "https://kladzdor.ru/": {
+            "columnNumber": 16,
+            "selectorName": ".detail-catalog-page-title-holder [itemprop='name']",
+            "selectorPrice": ".product-content [itemprop='price']"
+        },
+        "https://www.shop.mega-optim.ru": {
+            "columnNumber": 18,
+            "selectorName": "h1[itemprop='name']",
+            "selectorPrice": ".details-product-price__value"
+        },
+        "https://med-mos.ru/": {
+            "columnNumber": 20,
+            "selectorName": ".product_title_heading",
+            "selectorPrice": ".price_value"
+        },
+        "https://rnd.4stm.ru/": {
+            "columnNumber": 1,
+            "selectorName": ".pcard-name h1",
+            "selectorPrice": ".pcard-sum-value",
+            "selectorImage": ".lightboxgroup.cboxElement",
+            "selectorCode": ".pcard-props tr:first-child td:last-child"
+        }
+    },
+    "typeFilesWithFields": {
+        "ym": {
+            "dbFields": [
+                "name",
+                "retailPrice",
+                "weightKg",
+                "skuYm",
+                "lenths"
+            ],
+            "excelNumbersColumns": ["D", "Z", "K", "C", "J"],
+            "tagName": "Ассортимент",
+            "beginProductRowNumber": 5
+        },
+        "ozon": {
+            "dbFields": ["name", "retailPrice", "brand", "barcode", "weightKg", "artOzon", "ndsOzon", "commTypeOzon"],
+            "excelNumbersColumns": ["F", "U", "G", "E", "P", "A", "Z", "N"],
+            "tagName": "products",
+            "beginProductRowNumber": 2
+        },
+        "price_list": {
+            "dbFields": ["code", "retailPrice", "quantityGoodsAtSupplier"],
+            "excelNumbersColumns": ["A", "D", "E"],
+            "tagName": "TDSheet",
+            "beginProductRowNumber": 17
+        },
+        "ost_baza": {
+            "dbFields": ["code", "retailPrice", "quantityGoodsAtSupplier"],
+            "excelNumbersColumns": ["B", "D", "E"],
+            "tagName": "Уютель LED+TL",
+            "beginProductRowNumber": 2
+        }
+    },
+    "dbFieldsForYml": {
+        "ym" : [
+        	"id",
+            "name",
+            "retailPrice",
+	        "category",
+	        "quantityGoodsAtOurStore"
+        ],
+        "ozon": [
+        	"artOzon",
+            "name",
+	        "retailPrice",
+	        "quantityGoodsAtOurStore"
+        ]
+    }
+}

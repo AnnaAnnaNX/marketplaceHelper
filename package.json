@@ -1,0 +1,41 @@
+{
+  "name": "example-swagger-autogen-using-router",
+  "version": "1.0.0",
+  "description": "Example showing the use of the swagger-autogen module with Router.",
+  "main": "index.js",
+  "readmeFilename": "README.md",
+  "private": false,
+  "keywords": [
+    "swagger",
+    "autogen",
+    "example",
+    "router"
+  ],
+  "author": {
+    "name": "Davi D. Baltar",
+    "email": "davibaltar.npm@gmail.com"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/davibaltar/example-swagger-autogen-with-router.git"
+  },
+  "scripts": {
+    "serve": "node --max-old-space-size=8192 src/index.js",
+    "start-gendoc": "node swagger.js",
+    "test": "jest"
+  },
+  "dependencies": {
+    "exceljs": "^4.3.0",
+    "express": "^4.17.1",
+    "express-zip": "^3.0.0",
+    "multer": "^1.4.3",
+    "nodemon": "^2.0.14",
+    "puppeteer": "^11.0.0",
+    "swagger-autogen": "^2.11.1",
+    "swagger-ui-express": "^4.1.4"
+  },
+  "devDependencies": {
+    "jest": "^27.4.7"
+  }
+}

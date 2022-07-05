@@ -38,8 +38,8 @@ router.route('/').post( upload.array("multFiles", 1), async (req, res, next) => 
     try {
         const inputParams = {};
         inputParams.groupLink = 'https://partner.market.yandex.ru/supplier/26020183/assortment';
-        inputParams.login = req.login || 'AnnaAnnaNX@yandex.ru';
-        inputParams.password = req.password || 'Visuzu54';
+        inputParams.login = (req.body && req.body.login) || 'AnnaAnnaNX@yandex.ru';
+        inputParams.password = (req.body && req.body.password) || 'Visuzu54';
             
         const persentProducts = await parsePersentProducts(inputParams);
 

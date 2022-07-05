@@ -165,6 +165,21 @@
             "in": "formData",
             "type": "string",
             "required": false
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "login": {
+                  "example": "any"
+                },
+                "password": {
+                  "example": "any"
+                }
+              }
+            }
           }
         ],
         "responses": {

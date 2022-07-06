@@ -50,7 +50,7 @@ const durationPause = 1000;
         let page = await browser.newPage();
         await page.emulate(iPhone);
 
-        const { groupLink, login, password } = inputParams;
+        const { assortimentLink, login, password } = inputParams;
         const result = await auth(page, login, password);
         if (!result.success) return { success: false };
         // page = result.page;
@@ -67,7 +67,7 @@ const durationPause = 1000;
         let elsCount = 0;
         do {
             try {
-              await page.goto(`${groupLink}?page=${i}`);
+              await page.goto(`${assortimentLink}?page=${i}`);
               if (!await checkExistance(page, selectorRow)) break;
               
               elsCount = await page.$$eval(selectorRow, els => els.length);

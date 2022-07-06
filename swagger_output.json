@@ -167,6 +167,12 @@
             "required": false
           },
           {
+            "name": "assortimentLink",
+            "in": "formData",
+            "type": "string",
+            "required": false
+          },
+          {
             "name": "body",
             "in": "body",
             "schema": {
@@ -176,6 +182,9 @@
                   "example": "any"
                 },
                 "password": {
+                  "example": "any"
+                },
+                "assortimentLink": {
                   "example": "any"
                 }
               }

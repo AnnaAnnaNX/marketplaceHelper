@@ -34,12 +34,17 @@ router.route('/').post( upload.array("multFiles", 1), async (req, res, next) => 
             type: 'string',
             required: false,
         }
+        #swagger.parameters['assortimentLink'] = {
+            in: 'formData',
+            type: 'string',
+            required: false,
+        }
      */
     try {
         const inputParams = {};
-        inputParams.groupLink = 'https://partner.market.yandex.ru/supplier/26020183/assortment';
         inputParams.login = (req.body && req.body.login) || 'AnnaAnnaNX@yandex.ru';
         inputParams.password = (req.body && req.body.password) || 'Visuzu54';
+        inputParams.assortimentLink = (req.body && req.body.assortimentLink) || 'https://partner.market.yandex.ru/supplier/26020183/assortment';
             
         const persentProducts = await parsePersentProducts(inputParams);
 

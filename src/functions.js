@@ -22,8 +22,13 @@ const showDoc = async (file) => {
     return await showExcelContent(file);
 }
 
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 module.exports = {
     setPricies,
     showDoc,
-    matchingAvailabilities
+    matchingAvailabilities,
+    sleep
 }

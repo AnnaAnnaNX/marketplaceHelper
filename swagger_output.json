@@ -146,6 +146,57 @@
           }
         }
       }
+    },
+    "/ymProfitGetPersent/": {
+      "post": {
+        "description": "YM маржа, парсинг процента комиссии. Логин, пароль от аккаунта ЯМ. Результат - файл с столбцами sku, name, persent, delivery.",
+        "consumes": [
+          "multipart/form-data"
+        ],
+        "parameters": [
+          {
+            "name": "login",
+            "in": "formData",
+            "type": "string",
+            "required": false
+          },
+          {
+            "name": "password",
+            "in": "formData",
+            "type": "string",
+            "required": false
+          },
+          {
+            "name": "assortimentLink",
+            "in": "formData",
+            "type": "string",
+            "required": false
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "login": {
+                  "example": "any"
+                },
+                "password": {
+                  "example": "any"
+                },
+                "assortimentLink": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
     }
   },
   "definitions": {

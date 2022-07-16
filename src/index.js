@@ -15,6 +15,7 @@ const app = express()
 
 
 app.use(express.static(__dirname + '/public'));
+app.use(express.static(__dirname + '/inputFiles'));
 
 /* Routes */
 const router = require('./routes')

@@ -1,6 +1,7 @@
 const path = require('path');
 const ExcelJS = require('exceljs');
-const { fileInfoForReadFile } = require('../consts.js');
+const { fileInfoForReadFile, templates } = require('../consts.js');
+const { lutimes } = require('fs');
 
 const normalizeCells = (cells) => {
     return cells
@@ -60,25 +61,29 @@ const writeYMAmount = async (content) => {
     try {
         let worksheet = null;
         const workbook = new ExcelJS.Workbook();
-        await workbook.xlsx.readFile(file.path);
+        await workbook.xlsx.readFile(path.resolve(__dirname, '..', 'inputFiles', templates.ymAmount));
 
-        worksheet = workbook.worksheets[0];
+        // worksheet = workbook.worksheets[0];
+        
+        worksheet = await workbook.getWorksheet(fileInfoForReadFile['ymRenewSetAmount.xlsx'].tagName);
 
+        // const skuValues = content.columns.sku;
+        // skuValues.forEach((sku, i) => {
+        //     const row = worksheet.getRow(i + fileInfoForReadFile['ymRenewSetAmount.xlsx'].rowBeginProduct);
+        //     row.values = [, , 111, ,111];
+        //     row.commit();
+        // });
 
-        // for (let i = 0; i < Object.keys(shops).length; i++) {
-        worksheet.getColumn(1).values = content[nameShop].links;
-        // if (true) {worksheet.getColumn(i*3 + 1).values = content[Object.keys(shops)[i]].links;}
-        worksheet.getColumn(2).values = content[nameShop].names;
-        worksheet.getColumn(3).values = content[nameShop].prices;
-        worksheet.getColumn(4).values = content[nameShop].imgs;
-        worksheet.getColumn(5).values = content[nameShop].codes;
-        // }
-        // for (let i = 0; i < 9; i++) {
-        //     worksheet.getColumn(i + 1).width = 30;
-        // }
-
-        await workbook.xlsx.writeFile('./result.xlsx');
-
+        // worksheet.insertRow(5, [, , 111, ,111]);
+        // const a = worksheet.insertRows(5, [[111, 111],['a', 'b']]);
+        worksheet.getRow(5).values = [1,2,3];
+        // const a = worksheet.getColumn(3).values;
+        // console.log(a);
+        // worksheet.getColumn(5).values = ['1','2','3'];
+        
+        const filename = `./upload/result${Math.random().toString(36)}.xlsx`;
+        await workbook.xlsx.writeFile(filename);
+        return filename;
     } catch(e) {
         console.log('writeYmAmount');
         console.log(e);
@@ -90,7 +95,7 @@ const renewAmountYM = async (file) => {
         // вызов функции универсального чтения файла
         const content = await uniqueReadExcelFile(file, "Прайс-лист ИП Булюнов Артём Мусаевич");
         console.log(content);
-        const fileAmount = await writeYMAmount();
+        const fileAmount = await writeYMAmount(content);
         return fileAmount;
     } catch (e) {
         return { success: false };

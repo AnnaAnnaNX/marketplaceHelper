@@ -32,8 +32,6 @@ router.route('/').post( upload.array("multFiles", 1), async (req, res, next) => 
         }
         // return files for archive results
         const fileAmount = await renewAmountYM(req.files[0]);
-        console.log('content');
-        console.log(content);
 
         res.download(fileAmount, 'result.xlsx');
     } catch (e) {

@@ -11,7 +11,7 @@ const upload = multer({ dest: 'upload/' })
 const { renewAmountYM } = require('../scripts/ymRenewAmountFunctions');
 
 router.route('/').post( upload.array("multFiles", 1), async (req, res, next) => {
-    // #swagger.description = 'Обновление остатков YM. Note: .xls need save as .xlsx'
+    // #swagger.description = 'Обновление остатков YM. Note: .xls need save as .xlsx. Шаблон для остатков - http://localhost:3000/ymRenewSetAmount.xlsx'
     /*
         #swagger.consumes = ['multipart/form-data']  
         #swagger.parameters['multFiles'] = {
@@ -30,6 +30,7 @@ router.route('/').post( upload.array("multFiles", 1), async (req, res, next) => 
         if (!req.files || !req.files.length) {
             return {'error': 'not load file'};
         }
+        // return files for archive results
         let content = await renewAmountYM(req.files[0]);
         console.log('content');
         console.log(content);

@@ -1,9 +1,11 @@
 const path = require('path');
 const ExcelJS = require('exceljs');
-const { fileInfoForReadFile } = require('../consts.json');
+const { fileInfoForReadFile } = require('../consts.js');
 
 const normalizeCells = (cells) => {
-    return cells.map((el) => (el ? el.trim() : el));
+    return cells
+        ? cells.map((el) => (el ? el.toString().trim() : el))
+        : cells;
 }
 
 const getNumberColumnByHeaders = (skuColumnName, headers, allHeaders) => {
@@ -43,11 +45,10 @@ const uniqueReadExcelFile = async (file, filenameForConstantsFile) => {
         const { nSkuColumn, nColumns} = getNumberColumnByHeaders(info.skuColumnName, info.columnsNames, headerRow);
         console.log(nSkuColumn, nColumns);   
         // результат в двух вариантах - [col1, col2], {sku1: {все поля}}
-        const columns = {};
-        const skuColumn = worksheet.getColumn(nSkuColumn);
-        columns['sku'] = skuColumn.values.map((el) => (`000000${el}`));
+        const columns = {};const a = worksheet.getColumn(nSkuColumn);
+        columns['sku'] = info.foratters['sku'] ? worksheet.getColumn(nSkuColumn).values.map(info.foratters['sku']) : worksheet.getColumn(nSkuColumn);
         info.columnsNames.forEach((header, i) => {
-            columns[header] = worksheet.getColumn(nColumns[i]).values;
+            columns[header] = info.foratters[header] ? worksheet.getColumn(nColumns[i]).values.map(info.foratters[header]) : worksheet.getColumn(nColumns[i]).values;
         })
         return {columns, object: createObjectFromColumns(columns)};
     } catch (e) {

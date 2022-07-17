@@ -6,7 +6,7 @@ const fileInfoForReadFile = {
         columnsNames: ['Остаток', 'Цена'],
         skuColumnName: 'Номенклатура.Код', // далее столбце будет sku
         foratters: {
-            'sku': (val) => (`00000${val}`)
+            'sku': (val) => (`000000${val}`)
         }
     }
 };

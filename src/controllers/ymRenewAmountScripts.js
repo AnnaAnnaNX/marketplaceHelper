@@ -31,14 +31,11 @@ router.route('/').post( upload.array("multFiles", 1), async (req, res, next) => 
             return {'error': 'not load file'};
         }
         // return files for archive results
-        let content = await renewAmountYM(req.files[0]);
+        const fileAmount = await renewAmountYM(req.files[0]);
         console.log('content');
         console.log(content);
 
-        await writeReports(content);
-
-        res.download('./result.xlsx', 'result.xlsx');
-        // res.download(path.join(__dirname, '../../', req.files[0].path), 'resul.xlsx');
+        res.download(fileAmount, 'result.xlsx');
     } catch (e) {
         console.log('error on calculate');
         res.status(500);

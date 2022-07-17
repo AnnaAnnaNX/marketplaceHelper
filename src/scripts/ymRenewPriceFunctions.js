@@ -1,7 +1,6 @@
 const path = require('path');
 const ExcelJS = require('exceljs');
 const { fileInfoForReadFile, templates } = require('../consts.js');
-const { uniqueReadExcelFile } = require('../utils');
 
 const writeYMAmount = async (content) => {
     try {
@@ -29,7 +28,7 @@ const writeYMAmount = async (content) => {
     }
 } 
 
-const renewAmountYM = async (file) => {
+const renewPriceYM = async (file) => {
     try {
         // вызов функции универсального чтения файла
         const content = await uniqueReadExcelFile(file, "Прайс-лист ИП Булюнов Артём Мусаевич");
@@ -42,5 +41,5 @@ const renewAmountYM = async (file) => {
 }
 
 module.exports = {
-    renewAmountYM,
+    renewPriceYM,
 }

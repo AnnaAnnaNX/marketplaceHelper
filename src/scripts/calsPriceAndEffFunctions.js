@@ -1,9 +1,7 @@
 const ExcelJS = require('exceljs');
 const { fileInfoForReadFile } = require('../consts');
 const { normalizeCells, getNumberColumnByHeaders, createObjectFromColumns } = require('../utils');
-
-const listColumnNamesWithSku = [''];
-
+const _ = require("lodash");
 
 const universalReadExcelFileNew = async (file, filenameForConstantsFile) => {
     try {
@@ -43,13 +41,24 @@ const universalReadExcelFileNew = async (file, filenameForConstantsFile) => {
 const createUnionAssort = async (files, fileNamesForfileInfo ) => {
     console.log('createUnionAssort');
     const arrayOfObj = [];
+    const arraysSku = [];
     for(let i=0; i<files.length; i++) {
-        arrayOfObj.push(await universalReadExcelFileNew(files[i], fileNamesForfileInfo[i]));
+        const obj = await universalReadExcelFileNew(files[i], fileNamesForfileInfo[i]);
+        arrayOfObj.push(obj);
+        arraysSku.push(Object.keys(obj));
     }
     // взять ключи-sku из всех объектов
     // функцией lodash оставить там только пересечение этих множеств
 
-    return arrayOfObj;
+    const assortSku = _.intersection(...arraysSku);
+    const accort = {};
+    assortSku.forEach((sku) => {accort[sku] = {};
+        arrayOfObj.forEach((obj) => {
+            accort[sku] = {...accort[sku], ...obj[sku]};
+        })
+    })
+
+    return accort;
 }
 
 module.exports = {

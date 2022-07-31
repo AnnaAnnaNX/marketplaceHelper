@@ -8,9 +8,9 @@ const router = express.Router()
 const multer = require('multer')
 const upload = multer({ dest: 'upload/' })
 
-const { renewAmountYM } = require('../scripts/ymRenewAmountFunctions');
+const { createUnionAssort } = require('../scripts/calsPriceAndEffFunctions');
 
-router.route('/ym/calcEffByPrice').post( upload.array("multFiles", 1), async (req, res, next) => {
+router.route('/ym/calcEffByPrice').post( upload.array("multFiles", 10), async (req, res, next) => {
     // #swagger.description = 'Загрузите файлы Парсинга ЯМ, price'
     /*
         #swagger.consumes = ['multipart/form-data']  
@@ -28,15 +28,18 @@ router.route('/ym/calcEffByPrice').post( upload.array("multFiles", 1), async (re
         console.log('files');
         console.log(files);
 
-        res.download(fileAmount, 'result.xlsx');
+        const assort = await createUnionAssort(files, ['парсинг ЯМ', 'цены']);
+        console.log(assort);
+
+        // res.download(fileAmount, 'result.xlsx');
+        res.send('111');
     } catch (e) {
         console.log('error on calculate');
         res.status(500);
     }
 })
 
-
-router.route('/ym/calcPriceByEff').post( upload.array("multFiles", 1), async (req, res, next) => {
+router.route('/ym/calcPriceByEff').post( upload.array("multFiles", 10), async (req, res, next) => {
     // #swagger.description = 'Загрузите файлы Парсинга ЯМ, eff'
     /*
         #swagger.consumes = ['multipart/form-data']  
@@ -54,15 +57,18 @@ router.route('/ym/calcPriceByEff').post( upload.array("multFiles", 1), async (re
         console.log('files');
         console.log(files);
 
-        res.download(fileAmount, 'result.xlsx');
+        const assort = await createUnionAssort(files, ['парсинг ЯМ', 'процент эффективности']);
+        console.log(assort);
+
+        // res.download(fileAmount, 'result.xlsx');
+        res.send('111');
     } catch (e) {
         console.log('error on calculate');
         res.status(500);
     }
 })
 
-
-router.route('/ozon/calcEffByPrice').post( upload.array("multFiles", 1), async (req, res, next) => {
+router.route('/ozon/calcEffByPrice').post( upload.array("multFiles", 10), async (req, res, next) => {
     // #swagger.description = 'Загрузите файлы Закупка, Шаблон цен, price'
     /*
         #swagger.consumes = ['multipart/form-data']  
@@ -80,15 +86,18 @@ router.route('/ozon/calcEffByPrice').post( upload.array("multFiles", 1), async (
         console.log('files');
         console.log(files);
 
-        res.download(fileAmount, 'result.xlsx');
+        const assort = await createUnionAssort(files, ['закупка Ozon', 'шаблон цен Ozon', 'цены']);
+        console.log(assort);
+
+        // res.download(fileAmount, 'result.xlsx');
+        res.send('111');
     } catch (e) {
         console.log('error on calculate');
         res.status(500);
     }
 })
 
-
-router.route('/ozon/calcPriceByEff').post( upload.array("multFiles", 1), async (req, res, next) => {
+router.route('/ozon/calcPriceByEff').post( upload.array("multFiles", 10), async (req, res, next) => {
     // #swagger.description = 'Загрузите файлы Закупка, Шаблон цен, eff'
     /*
         #swagger.consumes = ['multipart/form-data']  
@@ -106,7 +115,11 @@ router.route('/ozon/calcPriceByEff').post( upload.array("multFiles", 1), async (
         console.log('files');
         console.log(files);
 
-        res.download(fileAmount, 'result.xlsx');
+        const assort = await createUnionAssort(files, ['закупка Ozon', 'шаблон цен Ozon', 'процент эффективности']);
+        console.log(assort);
+
+        // res.download(fileAmount, 'result.xlsx');
+        res.send('111');
     } catch (e) {
         console.log('error on calculate');
         res.status(500);

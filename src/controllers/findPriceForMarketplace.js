@@ -10,6 +10,8 @@ const upload = multer({ dest: 'upload/' })
 
 const { createUnionAssort, ymCalculateEff } = require('../scripts/calsPriceAndEffFunctions');
 
+const { writeRowsInExcel } = require('../helpers');
+
 router.route('/ym/calcEffByPrice').post( upload.array("multFiles", 10), async (req, res, next) => {
     // #swagger.description = 'Загрузите файлы Парсинга ЯМ, price'
     /*
@@ -35,10 +37,15 @@ router.route('/ym/calcEffByPrice').post( upload.array("multFiles", 10), async (r
         console.log('resultArayWithEff');
         console.log(resultArayWithEff);
 
-        // res.download(fileAmount, 'result.xlsx');
-        res.send('111');
+        const rows = Object.keys(assort).map((sku) => resultArayWithEff[sku]);
+        await writeRowsInExcel([
+            'sku', 'name', 'Категория товара', 'Цена продажи', 'Эффективность',
+            'Закупка', 'Комиссия маркетплейса', 'Реклама', 'МГ/КГ'
+        ], rows);
+
+        res.download('./result.xlsx', 'result.xlsx');
     } catch (e) {
-        console.log('error on calculate');
+        console.log('error on /ym/calcEffByPrice');
         res.status(500);
     }
 })
@@ -67,7 +74,7 @@ router.route('/ym/calcPriceByEff').post( upload.array("multFiles", 10), async (r
         // res.download(fileAmount, 'result.xlsx');
         res.send('111');
     } catch (e) {
-        console.log('error on calculate');
+        console.log('error on /ym/calcPriceByEff');
         res.status(500);
     }
 })
@@ -96,7 +103,7 @@ router.route('/ozon/calcEffByPrice').post( upload.array("multFiles", 10), async 
         // res.download(fileAmount, 'result.xlsx');
         res.send('111');
     } catch (e) {
-        console.log('error on calculate');
+        console.log('error on /ozon/calcEffByPrice');
         res.status(500);
     }
 })
@@ -125,7 +132,7 @@ router.route('/ozon/calcPriceByEff').post( upload.array("multFiles", 10), async 
         // res.download(fileAmount, 'result.xlsx');
         res.send('111');
     } catch (e) {
-        console.log('error on calculate');
+        console.log('error on /ozon/calcPriceByEff');
         res.status(500);
     }
 })

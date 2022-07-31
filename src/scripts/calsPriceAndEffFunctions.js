@@ -1,6 +1,11 @@
 const ExcelJS = require('exceljs');
 const { fileInfoForReadFile } = require('../consts');
-const { normalizeCells, getNumberColumnByHeaders, createObjectFromColumns, setMinMax } = require('../utils');
+const {
+    normalizeCells,
+    getNumberColumnByHeaders,
+    createObjectFromColumns,
+    setMinMax
+ } = require('../utils');
 const _ = require("lodash");
 
 const universalReadExcelFileNew = async (file, filenameForConstantsFile) => {

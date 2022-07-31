@@ -8,7 +8,7 @@ const router = express.Router()
 const multer = require('multer')
 const upload = multer({ dest: 'upload/' })
 
-const { createUnionAssort, ymCalculateEff } = require('../scripts/calsPriceAndEffFunctions');
+const { createUnionAssort, ymCalculateEff, ymCalculatePrice } = require('../scripts/calsPriceAndEffFunctions');
 
 const { writeRowsInExcel } = require('../helpers');
 
@@ -51,7 +51,7 @@ router.route('/ym/calcEffByPrice').post( upload.array("multFiles", 10), async (r
 })
 
 router.route('/ym/calcPriceByEff').post( upload.array("multFiles", 10), async (req, res, next) => {
-    // #swagger.description = 'Загрузите файлы Парсинга ЯМ, eff'
+    // #swagger.description = 'Загрузите файлы Парсинга ЯМ, eff. ! Только для МГ'
     /*
         #swagger.consumes = ['multipart/form-data']  
         #swagger.parameters['multFiles'] = {
@@ -71,8 +71,17 @@ router.route('/ym/calcPriceByEff').post( upload.array("multFiles", 10), async (r
         const assort = await createUnionAssort(files, ['парсинг ЯМ', 'процент эффективности']);
         console.log(assort);
 
-        // res.download(fileAmount, 'result.xlsx');
-        res.send('111');
+        const resultArayWithPrice = ymCalculatePrice(assort);
+        console.log('resultArayWithPrice');
+        console.log(resultArayWithPrice);
+
+        const rows = Object.keys(assort).map((sku) => resultArayWithPrice[sku]);
+        await writeRowsInExcel([
+            'sku', 'name', 'Категория товара', 'Эффективность', 'Цена продажи',
+            'Закупка', 'МГ/КГ'
+        ], rows);
+
+        res.download('./result.xlsx', 'result.xlsx');
     } catch (e) {
         console.log('error on /ym/calcPriceByEff');
         res.status(500);

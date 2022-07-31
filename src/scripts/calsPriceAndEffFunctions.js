@@ -102,7 +102,36 @@ const ymCalculateEff = (assort) => {
     }
 }
 
+
+const ymCalculatePrice = (assort) => {
+    try {
+        const skuList = Object.keys(assort);
+        skuList.forEach((sku) => {
+            const obj = assort[sku];
+            obj['МГ/КГ'] = obj['delivery'] == 400 ? 'КГ' : 'МГ';
+
+            const constVal = parseFloat(obj['Эффективность']) * parseFloat(obj['Закупка']) + parseFloat(obj['Закупка']);
+            const f1 = (1 - parseFloat(obj['persent'])/100 - parseFloat(obj['Процент за прием денег от клиента']) / 100) * (constVal + 60);
+            const f2 = (1 - parseFloat(obj['persent'])/100 - parseFloat(obj['Процент за прием денег от клиента']) / 100 - 0.05) * constVal;
+            const f3 = (1 - parseFloat(obj['persent'])/100 - parseFloat(obj['Процент за прием денег от клиента']) / 100) * (constVal + 350);
+
+            const valPerc = f2 * 0.05;
+
+            if (valPerc < 60) obj['Цена продажи'] = f1
+            else if (valPerc < 350) obj['Цена продажи'] = f2
+            else  obj['Цена продажи'] = f3;
+
+            assort[sku] = obj;
+        });
+        return assort;
+    } catch(e) {
+        console.log(e);
+        throw new Error();
+    }
+}
+
 module.exports = {
     createUnionAssort,
-    ymCalculateEff
+    ymCalculateEff,
+    ymCalculatePrice
 }

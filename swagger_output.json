@@ -278,7 +278,7 @@
     },
     "/findPriceForMarketplace/ym/calcPriceByEff": {
       "post": {
-        "description": "Загрузите файлы Парсинга ЯМ, eff",
+        "description": "Загрузите файлы Парсинга ЯМ, eff. ! Только для МГ",
         "consumes": [
           "multipart/form-data"
         ],
@@ -296,9 +296,6 @@
           }
         ],
         "responses": {
-          "200": {
-            "description": "OK"
-          },
           "500": {
             "description": "Internal Server Error"
           }

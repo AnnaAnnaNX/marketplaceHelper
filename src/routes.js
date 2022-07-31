@@ -10,6 +10,8 @@ const createReportScripts = require('./controllers/createReport')
 const profitOzon = require('./controllers/profitOzon')
 const ozonKonkurentyScripts = require('./controllers/ozonKonkurentyScripts')
 const ymProfitGetPersentScripts = require('./controllers/ymProfitGetPersentScripts')
+const ymRenewAmountScripts = require('./controllers/ymRenewAmountScripts')
+const ymRenewPriceScripts = require('./controllers/ymRenewPriceScripts')
 
 router.use('/scripts', scripts)
 router.use('/rndScripts', rndScripts)
@@ -17,6 +19,8 @@ router.use('/createReport', createReportScripts)
 // router.use('/profitOzon', profitOzon)
 router.use('/ozonKonkurenty', ozonKonkurentyScripts)
 router.use('/ymProfitGetPersent', ymProfitGetPersentScripts)
+router.use('/ymRenewAmount', ymRenewAmountScripts)
+router.use('/ymRenewPrice', ymRenewPriceScripts)
 
 
 function store(req, res) {

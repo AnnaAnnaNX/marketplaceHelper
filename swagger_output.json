@@ -197,6 +197,162 @@
           }
         }
       }
+    },
+    "/ymRenewAmount/": {
+      "post": {
+        "description": "Обновление остатков YM. Note: .xls need save as .xlsx. Шаблон для остатков - http://localhost:3000/ymRenewSetAmount.xlsx",
+        "consumes": [
+          "multipart/form-data"
+        ],
+        "parameters": [
+          {
+            "name": "multFiles",
+            "in": "formData",
+            "type": "array",
+            "required": true,
+            "description": "Загрузить файл с данными",
+            "collectionFormat": "multi",
+            "items": {
+              "type": "file"
+            }
+          }
+        ],
+        "responses": {
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/ymRenewPrice/": {
+      "post": {
+        "description": "Обновление цен YM. Note: .xls need save as .xlsx. Шаблон для остатков - http://localhost:3000/ymRenewSetAmount.xlsx",
+        "consumes": [
+          "multipart/form-data"
+        ],
+        "parameters": [
+          {
+            "name": "multFiles",
+            "in": "formData",
+            "type": "array",
+            "required": true,
+            "description": "Загрузить файл с данными",
+            "collectionFormat": "multi",
+            "items": {
+              "type": "file"
+            }
+          }
+        ],
+        "responses": {
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/findPriceForMarketplace/ym/calcEffByPrice": {
+      "post": {
+        "description": "Загрузите файлы Парсинга ЯМ, price",
+        "consumes": [
+          "multipart/form-data"
+        ],
+        "parameters": [
+          {
+            "name": "multFiles",
+            "in": "formData",
+            "type": "array",
+            "required": true,
+            "description": "Загрузить файл с данными",
+            "collectionFormat": "multi",
+            "items": {
+              "type": "file"
+            }
+          }
+        ],
+        "responses": {
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/findPriceForMarketplace/ym/calcPriceByEff": {
+      "post": {
+        "description": "Загрузите файлы Парсинга ЯМ, eff",
+        "consumes": [
+          "multipart/form-data"
+        ],
+        "parameters": [
+          {
+            "name": "multFiles",
+            "in": "formData",
+            "type": "array",
+            "required": true,
+            "description": "Загрузить файл с данными",
+            "collectionFormat": "multi",
+            "items": {
+              "type": "file"
+            }
+          }
+        ],
+        "responses": {
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/findPriceForMarketplace/ozon/calcEffByPrice": {
+      "post": {
+        "description": "Загрузите файлы Закупка, Шаблон цен, price",
+        "consumes": [
+          "multipart/form-data"
+        ],
+        "parameters": [
+          {
+            "name": "multFiles",
+            "in": "formData",
+            "type": "array",
+            "required": true,
+            "description": "Загрузить файл с данными",
+            "collectionFormat": "multi",
+            "items": {
+              "type": "file"
+            }
+          }
+        ],
+        "responses": {
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/findPriceForMarketplace/ozon/calcPriceByEff": {
+      "post": {
+        "description": "Загрузите файлы Закупка, Шаблон цен, eff",
+        "consumes": [
+          "multipart/form-data"
+        ],
+        "parameters": [
+          {
+            "name": "multFiles",
+            "in": "formData",
+            "type": "array",
+            "required": true,
+            "description": "Загрузить файл с данными",
+            "collectionFormat": "multi",
+            "items": {
+              "type": "file"
+            }
+          }
+        ],
+        "responses": {
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
     }
   },
   "definitions": {

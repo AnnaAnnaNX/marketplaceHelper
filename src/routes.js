@@ -12,6 +12,7 @@ const ozonKonkurentyScripts = require('./controllers/ozonKonkurentyScripts')
 const ymProfitGetPersentScripts = require('./controllers/ymProfitGetPersentScripts')
 const ymRenewAmountScripts = require('./controllers/ymRenewAmountScripts')
 const ymRenewPriceScripts = require('./controllers/ymRenewPriceScripts')
+const findPriceForMarketplaceScripts = require('./controllers/findPriceForMarketplace')
 
 router.use('/scripts', scripts)
 router.use('/rndScripts', rndScripts)
@@ -21,6 +22,7 @@ router.use('/ozonKonkurenty', ozonKonkurentyScripts)
 router.use('/ymProfitGetPersent', ymProfitGetPersentScripts)
 router.use('/ymRenewAmount', ymRenewAmountScripts)
 router.use('/ymRenewPrice', ymRenewPriceScripts)
+router.use('/findPriceForMarketplace', findPriceForMarketplaceScripts)
 
 
 function store(req, res) {

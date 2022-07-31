@@ -1,6 +1,6 @@
 const ExcelJS = require('exceljs');
 const { fileInfoForReadFile } = require('../consts');
-const { normalizeCells, getNumberColumnByHeaders, createObjectFromColumns } = require('../utils');
+const { normalizeCells, getNumberColumnByHeaders, createObjectFromColumns, setMinMax } = require('../utils');
 const _ = require("lodash");
 
 const universalReadExcelFileNew = async (file, filenameForConstantsFile) => {
@@ -61,6 +61,43 @@ const createUnionAssort = async (files, fileNamesForfileInfo ) => {
     return accort;
 }
 
+const ymCalculateEff = (assort) => {
+    try {
+        const skuList = Object.keys(assort);
+        skuList.forEach((sku) => {
+            const obj = assort[sku];
+            obj['МГ/КГ'] = obj['delivery'] == 400 ? 'КГ' : 'МГ';
+            obj['Размещение товаров на витрине'] = obj['Цена продажи'] * obj['persent'] / 100;
+            obj['Приём и перевод платежа покупателя'] = obj['Цена продажи'] * obj['Процент за прием денег от клиента'] / 100;
+            if (obj['МГ/КГ'] === 'КГ') {
+                obj['Доставка покупателю'] = 400;
+            } else {
+                const val = obj['Цена продажи'] * 0.05;
+                obj['Доставка покупателю'] = setMinMax(val, 60, 350);
+            }
+            obj['Обработка заказа в сортировочном центре или пункте приема'] = 45;
+            
+            obj['Комиссия маркетплейса'] = obj['Размещение товаров на витрине']
+                + obj['Приём и перевод платежа покупателя']
+                + obj['Доставка покупателю']
+                + obj['Обработка заказа в сортировочном центре или пункте приема'];
+
+            obj['Реклама'] = obj['Цена продажи'] * obj['Процент рекламы'] / 100;
+
+            obj['Эффективность'] = (obj['Цена продажи']
+                - obj['Закупка']
+                - obj['Комиссия маркетплейса']
+                - obj['Реклама']) / obj['Закупка'];
+            assort[sku] = obj;
+        });
+        return assort;
+    } catch(e) {
+        console.log(e);
+        throw new Error();
+    }
+}
+
 module.exports = {
-    createUnionAssort
+    createUnionAssort,
+    ymCalculateEff
 }

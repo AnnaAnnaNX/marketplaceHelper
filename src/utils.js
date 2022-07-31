@@ -61,9 +61,16 @@ const uniqueReadExcelFile = async (file, filenameForConstantsFile) => {
     }
 }
 
+const setMinMax = (val, minimum, maximum) => {
+    if (val < minimum) return minimum;
+    if (val > maximum) return maximum;
+    return val;
+}
+
 module.exports = {
     uniqueReadExcelFile,
     createObjectFromColumns,
     getNumberColumnByHeaders,
-    normalizeCells 
+    normalizeCells,
+    setMinMax
 }

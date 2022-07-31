@@ -8,7 +8,7 @@ const router = express.Router()
 const multer = require('multer')
 const upload = multer({ dest: 'upload/' })
 
-const { createUnionAssort } = require('../scripts/calsPriceAndEffFunctions');
+const { createUnionAssort, ymCalculateEff } = require('../scripts/calsPriceAndEffFunctions');
 
 router.route('/ym/calcEffByPrice').post( upload.array("multFiles", 10), async (req, res, next) => {
     // #swagger.description = 'Загрузите файлы Парсинга ЯМ, price'
@@ -30,6 +30,10 @@ router.route('/ym/calcEffByPrice').post( upload.array("multFiles", 10), async (r
 
         const assort = await createUnionAssort(files, ['парсинг ЯМ', 'цены']);
         console.log(assort);
+
+        const resultArayWithEff = ymCalculateEff(assort);
+        console.log('resultArayWithEff');
+        console.log(resultArayWithEff);
 
         // res.download(fileAmount, 'result.xlsx');
         res.send('111');

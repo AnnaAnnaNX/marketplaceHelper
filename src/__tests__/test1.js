@@ -1,6 +1,6 @@
 const { calcMarkupYMAndWriteFile } = require('../helpers');
 
-test('calcMarkupYMAndWriteFile', async () => {
+test.skip('calcMarkupYMAndWriteFile', async () => {
   const content = [
     {
       name: "G125 Fireworks-E27-2W Лампа светодиодная",

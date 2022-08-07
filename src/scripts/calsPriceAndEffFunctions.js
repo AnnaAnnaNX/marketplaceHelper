@@ -7,7 +7,12 @@ const {
     setMinMax
  } = require('../utils');
 const _ = require("lodash");
-const { ymEffByPrice } = require('../calculateMarketplaceCommission/index');
+const { 
+    ymEffByPrice,
+    ymPriceByEff,
+    ozonEffByPrice,
+    ozonPriceByEff
+} = require('../calculateMarketplaceCommission/index');
 
 const universalReadExcelFileNew = async (file, filenameForConstantsFile) => {
     try {
@@ -131,16 +136,34 @@ const ymCalculatePrice = (assort) => {
             const obj = assort[sku];
             obj['МГ/КГ'] = obj['delivery'] == 400 ? 'КГ' : 'МГ';
 
-            const constVal = parseFloat(obj['Эффективность']) * parseFloat(obj['Закупка']) + parseFloat(obj['Закупка']);
-            const f1 = (1 - parseFloat(obj['persent'])/100 - parseFloat(obj['Процент за прием денег от клиента']) / 100) * (constVal + 60);
-            const f2 = (1 - parseFloat(obj['persent'])/100 - parseFloat(obj['Процент за прием денег от клиента']) / 100 - 0.05) * constVal;
-            const f3 = (1 - parseFloat(obj['persent'])/100 - parseFloat(obj['Процент за прием денег от клиента']) / 100) * (constVal + 350);
 
-            const valPerc = f2 * 0.05;
 
-            if (valPerc < 60) obj['Цена продажи'] = f1
-            else if (valPerc < 350) obj['Цена продажи'] = f2
-            else  obj['Цена продажи'] = f3;
+            try {
+                obj['МГ/КГ'] = obj['delivery'] == 400 ? 'КГ' : 'МГ';
+                obj['Цена продажи'] = ymPriceByEff(
+                    parseFloat(obj['Эффективность']),
+                    parseFloat(obj['Закупка']),
+                    parseFloat(obj['persent']),
+                    parseFloat(obj['Процент за прием денег от клиента']),
+                    parseFloat(obj['Процент рекламы']),
+                    obj['МГ/КГ']
+                );
+            } catch (e) {
+                obj['Цена продажи'] = '-';
+            }
+
+
+
+            // const constVal = parseFloat(obj['Эффективность']) * parseFloat(obj['Закупка']) + parseFloat(obj['Закупка']);
+            // const f1 = (1 - parseFloat(obj['persent'])/100 - parseFloat(obj['Процент за прием денег от клиента']) / 100) * (constVal + 60);
+            // const f2 = (1 - parseFloat(obj['persent'])/100 - parseFloat(obj['Процент за прием денег от клиента']) / 100 - 0.05) * constVal;
+            // const f3 = (1 - parseFloat(obj['persent'])/100 - parseFloat(obj['Процент за прием денег от клиента']) / 100) * (constVal + 350);
+
+            // const valPerc = f2 * 0.05;
+
+            // if (valPerc < 60) obj['Цена продажи'] = f1
+            // else if (valPerc < 350) obj['Цена продажи'] = f2
+            // else  obj['Цена продажи'] = f3;
 
             assort[sku] = obj;
         });

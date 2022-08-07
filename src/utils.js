@@ -65,7 +65,7 @@ const setMinMax = (val, minimum, maximum) => {
     if (val < minimum) return minimum;
     if (val > maximum) return maximum;
     return val;
-}
+}E
 
 module.exports = {
     uniqueReadExcelFile,

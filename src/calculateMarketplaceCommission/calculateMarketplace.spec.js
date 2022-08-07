@@ -33,7 +33,7 @@ test('ymPriceByEff', () => {
     // todo: тест для КГ
   });
 
-  test.skip('ozonEffByPrice', () => {
+  test('ozonEffByPrice', () => {
     console.log('ozonEffByPrice');
     expect(ozonEffByPrice(
       281.6,
@@ -42,7 +42,7 @@ test('ymPriceByEff', () => {
       0,
       0.2,
       'МГ'
-    )).toBeClose(0.3, 2);
+    )).toBeCloseTo(0.3, 2);
 
     // todo: тест для КГ
   });
@@ -56,7 +56,7 @@ test('ymPriceByEff', () => {
       0,
       0.2,
       'МГ'
-    )).toBeClose(281.6, 1);
+    )).toBeCloseTo(281.6, 1);
     
     // todo: тест для КГ
   });

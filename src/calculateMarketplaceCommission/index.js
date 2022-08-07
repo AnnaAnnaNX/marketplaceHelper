@@ -1,3 +1,5 @@
+const { objOzonWeight } = require('../ozonReferenceData/delevery');
+
 const fixPersent = (val) => {
     if (val > 1) val /= 100;
     if ((val < 1) && (val >= 0)) {
@@ -71,7 +73,26 @@ const ozonEffByPrice = (
     persentAdv,
     weight,
     mgOrKg, // 'МГ', 'КГ'
-) => {};
+) => {
+    persentCommission = fixPersent(persentCommission);
+    persentAdv = fixPersent(persentAdv);
+
+    let delivery = null;
+
+    if (mgOrKg === 'КГ') {
+        delivery = fixMinMax(price * 0.08, 1000, 1400) + 11 * weight;
+    } else {
+        const transformWeight = weight.toString().replace('.', ',');
+        if (!objOzonWeight[transformWeight]) throw new Error(`not data for weight ${weight}`);
+        const persent = parseFloat(objOzonWeight[transformWeight].persent);
+        const minim = parseFloat(objOzonWeight[transformWeight].minim);
+        const maxim = parseFloat(objOzonWeight[transformWeight].maxim);
+        delivery = fixMinMax(price * persent / 100, minim, maxim) + fixMinMax(price * 0.05, 60, 350);
+    }
+    
+    const eff = (price - purchase - persentCommission * price - delivery - persentAdv * price)/purchase;
+    return eff;
+};
 
 const ozonPriceByEff = (
     eff,

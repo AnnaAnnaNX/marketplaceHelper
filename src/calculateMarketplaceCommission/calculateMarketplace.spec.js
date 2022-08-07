@@ -47,7 +47,7 @@ test('ymPriceByEff', () => {
     // todo: тест для КГ
   });
 
-  test.skip('ozonPriceByEff', () => {
+  test('ozonPriceByEff', () => {
     console.log('ozonPriceByEff');
     expect(ozonPriceByEff(
       0.3,

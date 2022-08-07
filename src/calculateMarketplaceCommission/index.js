@@ -84,10 +84,10 @@ const ozonEffByPrice = (
     } else {
         const transformWeight = weight.toString().replace('.', ',');
         if (!objOzonWeight[transformWeight]) throw new Error(`not data for weight ${weight}`);
-        const persent = parseFloat(objOzonWeight[transformWeight].persent);
+        const persent = parseFloat(objOzonWeight[transformWeight].persent) / 100;
         const minim = parseFloat(objOzonWeight[transformWeight].minim);
         const maxim = parseFloat(objOzonWeight[transformWeight].maxim);
-        delivery = fixMinMax(price * persent / 100, minim, maxim) + fixMinMax(price * 0.05, 60, 350);
+        delivery = fixMinMax(price * persent, minim, maxim) + fixMinMax(price * 0.05, 60, 350);
     }
     
     const eff = (price - purchase - persentCommission * price - delivery - persentAdv * price)/purchase;
@@ -101,7 +101,84 @@ const ozonPriceByEff = (
     persentAdv,
     weight,
     mgOrKg, // 'МГ', 'КГ'
-) => {};
+) => {
+    persentCommission = fixPersent(persentCommission);
+    persentAdv = fixPersent(persentAdv);
+    
+    let price = null;
+    const val = purchase * eff + purchase;
+    if (mgOrKg === 'МГ') {
+        const transformWeight = weight.toString().replace('.', ',');
+        if (!objOzonWeight[transformWeight]) throw new Error(`not data for weight ${weight}`);
+        const persent = parseFloat(objOzonWeight[transformWeight].persent) / 100;
+        const minim = parseFloat(objOzonWeight[transformWeight].minim);
+        const maxim = parseFloat(objOzonWeight[transformWeight].maxim);
+
+        // todo simplify check
+        const prices = {};
+        prices['MinMin'] = (val + minim + 60)/(1 - persentCommission - persentAdv);
+        prices['MinPersent'] = (val + minim)/(1 - persentCommission - persentAdv - price * 0.05);
+        prices['MinMax'] = (val + minim + 350)/(1 - persentCommission - persentAdv);
+        
+        prices['PersentMin'] = (val + 60)/(1 - persentCommission - persentAdv - price * persent);
+        prices['PersentPersent'] = (val)/(1 - persentCommission - persentAdv - price * persent - price * 0.05);
+        prices['PersentMax'] = (val + 350)/(1 - persentCommission - persentAdv - price * persent);
+        
+        prices['MaxMin'] = (val + maxim + 60)/(1 - persentCommission - persentAdv);
+        prices['MaxPersent'] = (val + maxim)/(1 - persentCommission - persentAdv - price * 0.05);
+        prices['MaxMax'] = (val + maxim + 350)/(1 - persentCommission - persentAdv);
+
+        const check1 = [
+            prices['PersentMin'] * persent,
+            prices['PersentPersent'] * persent,
+            prices['PersentPersent'] * persent
+        ];
+        const check2 = [
+            prices['MinPersent'] * 0.05,
+            prices['PersentPersent'] * 0.05,
+            prices['MaxPersent'] * 0.05
+        ];
+
+        let zn1IsMin = 0;
+        if (check1[0] < minim) zn1IsMin++;
+        if (check1[1] < minim) zn1IsMin++;
+        if (check1[2] < minim) zn1IsMin++;
+        let zn1IsMax = 0;
+        if (check1[0] > maxim) zn1IsMax++;
+        if (check1[1] > maxim) zn1IsMax++;
+        if (check1[2] > maxim) zn1IsMax++;
+
+        let zn2IsMin = 0;
+        if (check2[0] < minim) zn2IsMin++;
+        if (check2[1] < minim) zn2IsMin++;
+        if (check2[2] < minim) zn2IsMin++;
+        let zn2IsMax = 0;
+        if (check2[0] > maxim) zn2IsMax++;
+        if (check2[1] > maxim) zn2IsMax++;
+        if (check2[2] > maxim) zn2IsMax++;
+
+        let key = '';
+        if (zn1IsMin >= 2) key = 'Min'
+            else if (zn1IsMax >= 2) key = 'Max'
+            else key = 'Persent';
+        if (zn2IsMin >= 2) key += 'Min'
+        else if (zn2IsMax >= 2) key += 'Max'
+        else key += 'Persent';
+
+        price = prices[key];
+    } else {
+        const priceMin = (val + 11 * weight)/(1 - persentCommission - persentAdv - 1000);
+        const priceMax = (val + 11 * weight)/(1 - persentCommission - persentAdv - 1400);
+        const pricePersent = (val + 11 * weight)/(1 - persentCommission - persentAdv - price * 0.08);
+
+        const checkDelivery = pricePersent * 0.08;
+        if (checkDelivery < 1000) price = priceMin
+            else if (checkDelivery < 1400) price = priceMax
+            else price = pricePersent;
+    }
+
+    return price;
+};
 
 module.exports = {
     ymEffByPrice,

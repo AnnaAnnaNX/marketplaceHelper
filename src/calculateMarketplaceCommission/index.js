@@ -1,7 +1,7 @@
 const { objOzonWeight } = require('../ozonReferenceData/delevery');
 
 const fixPersent = (val) => {
-    if (val > 1) val /= 100;
+    if (val >= 1) val /= 100;
     if ((val < 1) && (val >= 0)) {
         return val;
     }

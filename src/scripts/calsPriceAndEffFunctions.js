@@ -7,6 +7,7 @@ const {
     setMinMax
  } = require('../utils');
 const _ = require("lodash");
+const { ymEffByPrice } = require('../calculateMarketplaceCommission/index');
 
 const universalReadExcelFileNew = async (file, filenameForConstantsFile) => {
     try {
@@ -49,6 +50,8 @@ const createUnionAssort = async (files, fileNamesForfileInfo ) => {
     const arraysSku = [];
     for(let i=0; i<files.length; i++) {
         const obj = await universalReadExcelFileNew(files[i], fileNamesForfileInfo[i]);
+        console.log('obj');
+        console.log(obj);
         arrayOfObj.push(obj);
         arraysSku.push(Object.keys(obj));
     }
@@ -71,31 +74,46 @@ const ymCalculateEff = (assort) => {
         const skuList = Object.keys(assort);
         skuList.forEach((sku) => {
             const obj = assort[sku];
-            obj['МГ/КГ'] = obj['delivery'] == 400 ? 'КГ' : 'МГ';
-            obj['Размещение товаров на витрине'] = parseFloat(obj['Цена продажи'])
-                * parseFloat(obj['persent']) / 100;
-            obj['Приём и перевод платежа покупателя'] = parseFloat(obj['Цена продажи'])
-                * parseFloat(obj['Процент за прием денег от клиента']) / 100;
-            if (obj['МГ/КГ'] === 'КГ') {
-                obj['Доставка покупателю'] = 400;
-            } else {
-                const val = parseFloat(obj['Цена продажи']) * 0.05;
-                obj['Доставка покупателю'] = setMinMax(val, 60, 350);
+
+            try {
+                obj['МГ/КГ'] = obj['delivery'] == 400 ? 'КГ' : 'МГ';
+                obj['Эффективность'] = ymEffByPrice(
+                    parseFloat(obj['Цена продажи']),
+                    parseFloat(obj['Закупка']),
+                    parseFloat(obj['persent']),
+                    parseFloat(obj['Процент за прием денег от клиента']),
+                    parseFloat(obj['Процент рекламы']),
+                    obj['МГ/КГ']
+                );
+            } catch (e) {
+                obj['Эффективность'] = '-';
             }
-            obj['Обработка заказа в сортировочном центре или пункте приема'] = 45;
+
+            // obj['МГ/КГ'] = obj['delivery'] == 400 ? 'КГ' : 'МГ';
+            // obj['Размещение товаров на витрине'] = parseFloat(obj['Цена продажи'])
+            //     * parseFloat(obj['persent']) / 100;
+            // obj['Приём и перевод платежа покупателя'] = parseFloat(obj['Цена продажи'])
+            //     * parseFloat(obj['Процент за прием денег от клиента']) / 100;
+            // if (obj['МГ/КГ'] === 'КГ') {
+            //     obj['Доставка покупателю'] = 400;
+            // } else {
+            //     const val = parseFloat(obj['Цена продажи']) * 0.05;
+            //     obj['Доставка покупателю'] = setMinMax(val, 60, 350);
+            // }
+            // obj['Обработка заказа в сортировочном центре или пункте приема'] = 45;
             
-            obj['Комиссия маркетплейса'] = parseFloat(obj['Размещение товаров на витрине'])
-                + parseFloat(obj['Приём и перевод платежа покупателя'])
-                + parseFloat(obj['Доставка покупателю'])
-                + parseFloat(obj['Обработка заказа в сортировочном центре или пункте приема']);
+            // obj['Комиссия маркетплейса'] = parseFloat(obj['Размещение товаров на витрине'])
+            //     + parseFloat(obj['Приём и перевод платежа покупателя'])
+            //     + parseFloat(obj['Доставка покупателю'])
+            //     + parseFloat(obj['Обработка заказа в сортировочном центре или пункте приема']);
 
-            obj['Реклама'] = parseFloat(obj['Цена продажи'])
-                * parseFloat(obj['Процент рекламы']) / 100;
+            // obj['Реклама'] = parseFloat(obj['Цена продажи'])
+            //     * parseFloat(obj['Процент рекламы']) / 100;
 
-            obj['Эффективность'] = (parseFloat(obj['Цена продажи'])
-                - parseFloat(obj['Закупка'])
-                - parseFloat(obj['Комиссия маркетплейса'])
-                - parseFloat(obj['Реклама'])) / parseFloat(obj['Закупка']);
+            // obj['Эффективность'] = (parseFloat(obj['Цена продажи'])
+            //     - parseFloat(obj['Закупка'])
+            //     - parseFloat(obj['Комиссия маркетплейса'])
+            //     - parseFloat(obj['Реклама'])) / parseFloat(obj['Закупка']);
             assort[sku] = obj;
         });
         return assort;

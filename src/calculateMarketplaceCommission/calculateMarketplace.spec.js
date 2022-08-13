@@ -14,7 +14,7 @@ test('ymEffByPrice', () => {
     0.013,
     0,
     'МГ'
-  )).toBeCloseTo(0.29, 2);
+  ).eff).toBeCloseTo(0.29, 2);
 
   // todo: тест для КГ
 });
@@ -42,7 +42,7 @@ test('ymPriceByEff', () => {
       0,
       0.2,
       'МГ'
-    )).toBeCloseTo(0.3, 2);
+    ).eff).toBeCloseTo(0.3, 2);
 
     // todo: тест для КГ
   });

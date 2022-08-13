@@ -89,7 +89,7 @@ const ymCalculateEff = (assort) => {
                     parseFloat(obj['Процент за прием денег от клиента']),
                     parseFloat(obj['Процент рекламы']),
                     obj['МГ/КГ']
-                );
+                ).eff;
             } catch (e) {
                 obj['Эффективность'] = '-';
             }

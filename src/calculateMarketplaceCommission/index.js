@@ -33,8 +33,11 @@ const ymEffByPrice = (
         delivery = 400;
     }
     const commission = price * (persentCommission + persentAcceptance) + delivery + 45;
-    const eff = (price - purchase - commission) / purchase;
-    return eff;
+    const eff = (price - purchase - commission - persentAdv) / purchase;
+    return {
+        eff,
+        commission
+    };
 };
 
 const ymPriceByEff = (
@@ -91,7 +94,10 @@ const ozonEffByPrice = (
     }
     
     const eff = (price - purchase - persentCommission * price - delivery - persentAdv * price)/purchase;
-    return eff;
+    return {
+        eff,
+        commission: persentCommission * price - delivery
+    };
 };
 
 const ozonPriceByEff = (

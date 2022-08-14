@@ -23,7 +23,11 @@ const fileInfoForReadFile = {
         rowBeginProduct: 2,
         columnsNames: ['name',	'sku', 'persent', 'delivery','Закупка',	'Розничная цена', 'Процент за прием денег от клиента', 'Процент рекламы'],
         skuColumnName: 'sku',
-        formatters: {}
+        formatters: {
+            'Закупка': (val) => {
+                return val && val.result;
+            }
+        }
     },      
     'закупка Ozon': {
         tagName: 'закупка',

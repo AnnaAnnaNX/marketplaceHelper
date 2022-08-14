@@ -35,7 +35,7 @@ const ymEffByPrice = (
     // console.log('delivery');
     // console.log(delivery);
     const commission = price * (persentCommission + persentAcceptance) + delivery + 45;
-    const eff = (price - purchase - commission - persentAdv) / purchase;
+    const eff = (price - purchase - commission - persentAdv*price) / purchase;
     return {
         eff,
         commission

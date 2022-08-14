@@ -32,6 +32,8 @@ const ymEffByPrice = (
     } else {
         delivery = 400;
     }
+    // console.log('delivery');
+    // console.log(delivery);
     const commission = price * (persentCommission + persentAcceptance) + delivery + 45;
     const eff = (price - purchase - commission - persentAdv) / purchase;
     return {
@@ -83,7 +85,7 @@ const ozonEffByPrice = (
     let delivery = null;
 
     if (mgOrKg === 'КГ') {
-        delivery = fixMinMax(price * 0.08, 1000, 1400) + 11 * weight;
+        delivery = fixMinMax(price * 0.08, 1000, 1400); // + 11 * weight;
     } else {
         const transformWeight = weight.toString().replace('.', ',');
         if (!objOzonWeight[transformWeight]) throw new Error(`not data for weight ${weight}`);
@@ -96,7 +98,7 @@ const ozonEffByPrice = (
     const eff = (price - purchase - persentCommission * price - delivery - persentAdv * price)/purchase;
     return {
         eff,
-        commission: persentCommission * price - delivery
+        commission: persentCommission * price + delivery
     };
 };
 

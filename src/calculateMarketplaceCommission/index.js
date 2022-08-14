@@ -222,9 +222,9 @@ const ozonPriceByEff = (
             price = prices[avaluableValues[0]];
         } else price='-';
     } else {
-        const priceMin = (val + 11 * weight)/(1 - persentCommission - persentAdv - 1000);
-        const priceMax = (val + 11 * weight)/(1 - persentCommission - persentAdv - 1400);
-        const pricePersent = (val + 11 * weight)/(1 - persentCommission - persentAdv - price * 0.08);
+        const priceMin = (val)/(1 - persentCommission - persentAdv - 1000);
+        const priceMax = (val)/(1 - persentCommission - persentAdv - 1400);
+        const pricePersent = (val)/(1 - persentCommission - persentAdv - price * 0.08);
 
         const checkDelivery = pricePersent * 0.08;
         if (checkDelivery < 1000) price = priceMin

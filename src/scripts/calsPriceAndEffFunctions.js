@@ -82,16 +82,19 @@ const ymCalculateEff = (assort) => {
 
             try {
                 obj['МГ/КГ'] = obj['delivery'] == 400 ? 'КГ' : 'МГ';
-                obj['Эффективность'] = ymEffByPrice(
+                const { eff, commission } = ymEffByPrice(
                     parseFloat(obj['Цена продажи']),
                     parseFloat(obj['Закупка']),
                     parseFloat(obj['persent']),
                     parseFloat(obj['Процент за прием денег от клиента']),
                     parseFloat(obj['Процент рекламы']),
                     obj['МГ/КГ']
-                ).eff;
+                );
+                obj['Эффективность'] = eff;                
+                obj['Комиссия маркетплейса'] = commission;
             } catch (e) {
-                obj['Эффективность'] = '-';
+                obj['Эффективность'] = '-';            
+                obj['Комиссия маркетплейса'] = '-';
             }
 
             // obj['МГ/КГ'] = obj['delivery'] == 400 ? 'КГ' : 'МГ';
@@ -152,19 +155,66 @@ const ymCalculatePrice = (assort) => {
                 obj['Цена продажи'] = '-';
             }
 
+            assort[sku] = obj;
+        });
+        return assort;
+    } catch(e) {
+        console.log(e);
+        throw new Error();
+    }
+}
+
+const ozonCalculateEff = (assort) => {
+    try {
+        const skuList = Object.keys(assort);
+        skuList.forEach((sku) => {
+            const obj = assort[sku];
+
+            try {
+                obj['МГ/КГ'] = parseInt(obj['Последняя миля, FBS'], 10) == 0 ? 'КГ' : 'МГ';
+                const { eff, commission } =  ozonEffByPrice(
+                    parseFloat(obj['Цена продажи']),
+                    parseFloat(obj['ЗЦ, руб.']),
+                    parseFloat(obj['Размер комиссии, %']),
+                    parseFloat(obj['Комиссия за рекламу']),
+                    parseFloat(obj['Объемный вес, кг']),
+                    obj['МГ/КГ']
+                );                
+                obj['Эффективность'] = eff;                
+                obj['Комиссия маркетплейса'] = commission;
+            } catch (e) {
+                obj['Эффективность'] = '-';            
+                obj['Комиссия маркетплейса'] = '-';
+            }
+            assort[sku] = obj;
+        });
+        return assort;
+    } catch(e) {
+        console.log(e);
+        throw new Error();
+    }
+}
 
 
-            // const constVal = parseFloat(obj['Эффективность']) * parseFloat(obj['Закупка']) + parseFloat(obj['Закупка']);
-            // const f1 = (1 - parseFloat(obj['persent'])/100 - parseFloat(obj['Процент за прием денег от клиента']) / 100) * (constVal + 60);
-            // const f2 = (1 - parseFloat(obj['persent'])/100 - parseFloat(obj['Процент за прием денег от клиента']) / 100 - 0.05) * constVal;
-            // const f3 = (1 - parseFloat(obj['persent'])/100 - parseFloat(obj['Процент за прием денег от клиента']) / 100) * (constVal + 350);
-
-            // const valPerc = f2 * 0.05;
-
-            // if (valPerc < 60) obj['Цена продажи'] = f1
-            // else if (valPerc < 350) obj['Цена продажи'] = f2
-            // else  obj['Цена продажи'] = f3;
-
+const ozonCalculatePrice = (assort) => {
+    try {
+        const skuList = Object.keys(assort);
+        skuList.forEach((sku) => {
+            const obj = assort[sku];
+            obj['МГ/КГ'] = obj['delivery'] == 400 ? 'КГ' : 'МГ';
+            try {
+                obj['МГ/КГ'] = obj['delivery'] == 400 ? 'КГ' : 'МГ';
+                obj['Цена продажи'] = ozonPriceByEff(
+                    parseFloat(obj['Эффективность']),
+                    parseFloat(obj['Закупка']),
+                    parseFloat(obj['persent']),
+                    parseFloat(obj['Процент за прием денег от клиента']),
+                    parseFloat(obj['Процент рекламы']),
+                    obj['МГ/КГ']
+                );
+            } catch (e) {
+                obj['Цена продажи'] = '-';
+            }
             assort[sku] = obj;
         });
         return assort;
@@ -177,5 +227,7 @@ const ymCalculatePrice = (assort) => {
 module.exports = {
     createUnionAssort,
     ymCalculateEff,
-    ymCalculatePrice
+    ymCalculatePrice,
+    ozonCalculateEff,
+    ozonCalculatePrice
 }

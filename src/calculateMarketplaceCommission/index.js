@@ -102,6 +102,40 @@ const ozonEffByPrice = (
     };
 };
 
+const checkOzonVal = (
+    price,
+    name,
+    persent1,
+    min1,
+    max1,
+    persent2,
+    min2,
+    max2
+) => {
+    const val1 = price * persent1;
+    if (/^Min/.test(name)) {
+        if (val1 > min1) return false;
+    }
+    if (/^Max/.test(name)) {
+        if (val1 < max1) return false;
+    }
+    if (/^Persent/.test(name)) {
+        if (!((val1 >= min1) && (val1 <= max1))) return false;
+    }
+    
+    const val2 = price * persent2;
+    if (/Min$/.test(name)) {
+        if (val2 > min2) return false;
+    }
+    if (/Max$/.test(name)) {
+        if (val2 < max2) return false;
+    }
+    if (/Persent$/.test(name)) {
+        if (!((val2 >= min2) && (val1 <= max2))) return false;
+    }
+    return true;
+}
+
 const ozonPriceByEff = (
     eff,
     purchase, // закупка
@@ -136,44 +170,57 @@ const ozonPriceByEff = (
         prices['MaxPersent'] = (val + maxim)/(1 - persentCommission - persentAdv - price * 0.05);
         prices['MaxMax'] = (val + maxim + 350)/(1 - persentCommission - persentAdv);
 
-        const check1 = [
-            prices['PersentMin'] * persent,
-            prices['PersentPersent'] * persent,
-            prices['PersentPersent'] * persent
-        ];
-        const check2 = [
-            prices['MinPersent'] * 0.05,
-            prices['PersentPersent'] * 0.05,
-            prices['MaxPersent'] * 0.05
-        ];
+        const avaluableValues = Object.keys(prices).filter((name) => (checkOzonVal(
+            prices[name],
+            name,
+            persent,
+            minim,
+            maxim,
+            0.05,
+            60,
+            350
+        )));
 
-        let zn1IsMin = 0;
-        if (check1[0] < minim) zn1IsMin++;
-        if (check1[1] < minim) zn1IsMin++;
-        if (check1[2] < minim) zn1IsMin++;
-        let zn1IsMax = 0;
-        if (check1[0] > maxim) zn1IsMax++;
-        if (check1[1] > maxim) zn1IsMax++;
-        if (check1[2] > maxim) zn1IsMax++;
+        // const check1 = [
+        //     prices['PersentMin'] * persent,
+        //     prices['PersentPersent'] * persent,
+        //     prices['PersentMax'] * persent
+        // ];
+        // const check2 = [
+        //     prices['MinPersent'] * 0.05,
+        //     prices['PersentPersent'] * 0.05,
+        //     prices['MaxPersent'] * 0.05
+        // ];
 
-        let zn2IsMin = 0;
-        if (check2[0] < minim) zn2IsMin++;
-        if (check2[1] < minim) zn2IsMin++;
-        if (check2[2] < minim) zn2IsMin++;
-        let zn2IsMax = 0;
-        if (check2[0] > maxim) zn2IsMax++;
-        if (check2[1] > maxim) zn2IsMax++;
-        if (check2[2] > maxim) zn2IsMax++;
+        // let zn1IsMin = 0;
+        // if (check1[0] < minim) zn1IsMin++;
+        // if (check1[1] < minim) zn1IsMin++;
+        // if (check1[2] < minim) zn1IsMin++;
+        // let zn1IsMax = 0;
+        // if (check1[0] > maxim) zn1IsMax++;
+        // if (check1[1] > maxim) zn1IsMax++;
+        // if (check1[2] > maxim) zn1IsMax++;
 
-        let key = '';
-        if (zn1IsMin >= 2) key = 'Min'
-            else if (zn1IsMax >= 2) key = 'Max'
-            else key = 'Persent';
-        if (zn2IsMin >= 2) key += 'Min'
-        else if (zn2IsMax >= 2) key += 'Max'
-        else key += 'Persent';
+        // let zn2IsMin = 0;
+        // if (check2[0] < minim) zn2IsMin++;
+        // if (check2[1] < minim) zn2IsMin++;
+        // if (check2[2] < minim) zn2IsMin++;
+        // let zn2IsMax = 0;
+        // if (check2[0] > maxim) zn2IsMax++;
+        // if (check2[1] > maxim) zn2IsMax++;
+        // if (check2[2] > maxim) zn2IsMax++;
 
-        price = prices[key];
+        // let key = '';
+        // if (zn1IsMin >= 2) key = 'Min'
+        //     else if (zn1IsMax >= 2) key = 'Max'
+        //     else key = 'Persent';
+        // if (zn2IsMin >= 2) key += 'Min'
+        // else if (zn2IsMax >= 2) key += 'Max'
+        // else key += 'Persent';
+
+        if (avaluableValues) {
+            price = prices[avaluableValues[0]];
+        } else price='-';
     } else {
         const priceMin = (val + 11 * weight)/(1 - persentCommission - persentAdv - 1000);
         const priceMax = (val + 11 * weight)/(1 - persentCommission - persentAdv - 1400);

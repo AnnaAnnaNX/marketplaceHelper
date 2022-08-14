@@ -206,10 +206,10 @@ const ozonCalculatePrice = (assort) => {
                 obj['МГ/КГ'] = obj['delivery'] == 400 ? 'КГ' : 'МГ';
                 obj['Цена продажи'] = ozonPriceByEff(
                     parseFloat(obj['Эффективность']),
-                    parseFloat(obj['Закупка']),
-                    parseFloat(obj['persent']),
-                    parseFloat(obj['Процент за прием денег от клиента']),
-                    parseFloat(obj['Процент рекламы']),
+                    parseFloat(obj['ЗЦ, руб.']),
+                    parseFloat(obj['Размер комиссии, %']),
+                    parseFloat(obj['Комиссия за рекламу']),
+                    parseFloat(obj['Объемный вес, кг']),
                     obj['МГ/КГ']
                 );
             } catch (e) {

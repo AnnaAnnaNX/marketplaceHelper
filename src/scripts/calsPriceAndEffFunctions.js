@@ -30,7 +30,8 @@ const universalReadExcelFileNew = async (file, filenameForConstantsFile) => {
         const headerRow = normalizeCells(worksheet.getRow(info.rowHeader).values);
         // console.log('headerRow');
         // console.log(headerRow);
-        const { nSkuColumn, nColumns} = getNumberColumnByHeaders(info.skuColumnName, info.columnsNames, headerRow);
+        let { nSkuColumn, nColumns} = getNumberColumnByHeaders(info.skuColumnName, info.columnsNames, headerRow);
+        nColumns = nColumns.filter((el) => (el !== -1));
         // console.log('nSkuColumn, nColumns');
         // console.log(nSkuColumn, nColumns);
         // результат в двух вариантах - [col1, col2], {sku1: {все поля}}
@@ -39,9 +40,17 @@ const universalReadExcelFileNew = async (file, filenameForConstantsFile) => {
             ? worksheet.getColumn(nSkuColumn).values.slice(info.rowBeginProduct).map(info.formatters['sku'])
             : worksheet.getColumn(nSkuColumn).values.slice(info.rowBeginProduct);
         info.columnsNames.forEach((header, i) => {
+            // console.log('header');
+            // console.log(header);
+            // console.log('i');
+            // console.log(i);
+            // console.log('nColumns[i]');
+            // console.log(nColumns[i]);
+            if (nColumns[i]) {
             columns[header] = info.formatters[header]
                 ? worksheet.getColumn(nColumns[i]).values.slice(info.rowBeginProduct).map(info.formatters[header])
                 : worksheet.getColumn(nColumns[i]).values.slice(info.rowBeginProduct);
+            }
         })
         return createObjectFromColumns(columns, info.skuColumnName);
     } catch (e) {

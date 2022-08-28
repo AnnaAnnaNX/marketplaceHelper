@@ -31,7 +31,7 @@ const universalReadExcelFileNew = async (file, filenameForConstantsFile) => {
         // console.log('headerRow');
         // console.log(headerRow);
         let { nSkuColumn, nColumns} = getNumberColumnByHeaders(info.skuColumnName, info.columnsNames, headerRow);
-        nColumns = nColumns.filter((el) => (el !== -1));
+        // nColumns = nColumns.filter((el) => (el !== -1));
         // console.log('nSkuColumn, nColumns');
         // console.log(nSkuColumn, nColumns);
         // результат в двух вариантах - [col1, col2], {sku1: {все поля}}
@@ -46,7 +46,7 @@ const universalReadExcelFileNew = async (file, filenameForConstantsFile) => {
             // console.log(i);
             // console.log('nColumns[i]');
             // console.log(nColumns[i]);
-            if (nColumns[i]) {
+            if (nColumns[i] && (nColumns[i] != -1)) {
             columns[header] = info.formatters[header]
                 ? worksheet.getColumn(nColumns[i]).values.slice(info.rowBeginProduct).map(info.formatters[header])
                 : worksheet.getColumn(nColumns[i]).values.slice(info.rowBeginProduct);
@@ -210,9 +210,10 @@ const ozonCalculatePrice = (assort) => {
         const skuList = Object.keys(assort);
         skuList.forEach((sku) => {
             const obj = assort[sku];
-            obj['МГ/КГ'] = obj['delivery'] == 400 ? 'КГ' : 'МГ';
+            // obj['МГ/КГ'] = obj['delivery'] == 400 ? 'КГ' : 'МГ';
             try {
-                obj['МГ/КГ'] = obj['delivery'] == 400 ? 'КГ' : 'МГ';
+                // obj['МГ/КГ'] = obj['delivery'] == 400 ? 'КГ' : 'МГ';
+                obj['МГ/КГ'] = parseInt(obj['Последняя миля, FBS'], 10) == 0 ? 'КГ' : 'МГ';
                 obj['Цена продажи'] = ozonPriceByEff(
                     parseFloat(obj['Эффективность']),
                     parseFloat(obj['ЗЦ, руб.']),

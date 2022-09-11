@@ -25,7 +25,7 @@ const fileInfoForReadFile = {
         skuColumnName: 'sku',
         formatters: {
             'Закупка': (val) => {
-                return val && val.result;
+                return val || val.result;
             }
         }
     },      

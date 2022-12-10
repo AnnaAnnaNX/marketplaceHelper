@@ -13,6 +13,7 @@ const ymProfitGetPersentScripts = require('./controllers/ymProfitGetPersentScrip
 const ymRenewAmountScripts = require('./controllers/ymRenewAmountScripts')
 const ymRenewPriceScripts = require('./controllers/ymRenewPriceScripts')
 const findPriceForMarketplaceScripts = require('./controllers/findPriceForMarketplace')
+const analyticPricesScripts = require('./controllers/analyticPrices')
 
 router.use('/scripts', scripts)
 router.use('/rndScripts', rndScripts)
@@ -23,6 +24,7 @@ router.use('/ymProfitGetPersent', ymProfitGetPersentScripts)
 router.use('/ymRenewAmount', ymRenewAmountScripts)
 router.use('/ymRenewPrice', ymRenewPriceScripts)
 router.use('/findPriceForMarketplace', findPriceForMarketplaceScripts)
+router.use('/analytic-prices', analyticPricesScripts)
 
 
 function store(req, res) {

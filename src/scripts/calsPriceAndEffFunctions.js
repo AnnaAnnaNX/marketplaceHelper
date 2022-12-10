@@ -7,7 +7,7 @@ const {
     setMinMax
  } = require('../utils');
 const _ = require("lodash");
-const { 
+const {
     ymEffByPrice,
     ymPriceByEff,
     ozonEffByPrice,
@@ -21,7 +21,7 @@ const universalReadExcelFileNew = async (file, filenameForConstantsFile) => {
         let worksheet = null;
         const workbook = new ExcelJS.Workbook();
         await workbook.xlsx.readFile(file.path);
-        
+
         const info = fileInfoForReadFile[filenameForConstantsFile];
 
         // worksheet = await workbook.getWorksheet(info.tagName);
@@ -90,10 +90,10 @@ const ymCalculateEff = (assort) => {
                     parseFloat(obj['Процент рекламы']),
                     obj['МГ/КГ']
                 );
-                obj['Эффективность'] = eff;                
+                obj['Эффективность'] = eff;
                 obj['Комиссия маркетплейса'] = commission;
             } catch (e) {
-                obj['Эффективность'] = '-';            
+                obj['Эффективность'] = '-';
                 obj['Комиссия маркетплейса'] = '-';
             }
 
@@ -109,7 +109,7 @@ const ymCalculateEff = (assort) => {
             //     obj['Доставка покупателю'] = setMinMax(val, 60, 350);
             // }
             // obj['Обработка заказа в сортировочном центре или пункте приема'] = 45;
-            
+
             // obj['Комиссия маркетплейса'] = parseFloat(obj['Размещение товаров на витрине'])
             //     + parseFloat(obj['Приём и перевод платежа покупателя'])
             //     + parseFloat(obj['Доставка покупателю'])
@@ -179,11 +179,11 @@ const ozonCalculateEff = (assort) => {
                     parseFloat(obj['Комиссия за рекламу']),
                     parseFloat(obj['Объемный вес, кг']),
                     obj['МГ/КГ']
-                );                
-                obj['Эффективность'] = eff;                
+                );
+                obj['Эффективность'] = eff;
                 obj['Комиссия маркетплейса'] = commission;
             } catch (e) {
-                obj['Эффективность'] = '-';            
+                obj['Эффективность'] = '-';
                 obj['Комиссия маркетплейса'] = '-';
             }
             assort[sku] = obj;
@@ -229,5 +229,6 @@ module.exports = {
     ymCalculateEff,
     ymCalculatePrice,
     ozonCalculateEff,
-    ozonCalculatePrice
+    ozonCalculatePrice,
+    universalReadExcelFileNew
 }

@@ -21,7 +21,7 @@ const universalReadExcelFileNew = async (file, filenameForConstantsFile) => {
         // прочесть соответсвующие столбцы
         let worksheet = null;
         const workbook = new ExcelJS.Workbook();
-        await workbook.xlsx.readFile(path.resolve(__dirname, file.path));
+        await workbook.xlsx.readFile(file.path);
 
         const info = fileInfoForReadFile[filenameForConstantsFile];
 

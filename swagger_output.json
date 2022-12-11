@@ -356,7 +356,7 @@
     },
     "/analytic-prices/": {
       "post": {
-        "description": "Загрузите файлы Парсинга ЯМ, price",
+        "description": "Аналитика цен. Вх файлы: остатки http://localhost:3000/1_ostatki.xlsx, ссылки http://localhost:3000/2_links.xlsx. Имена файлов должны быть без пробелов! ",
         "consumes": [
           "multipart/form-data"
         ],

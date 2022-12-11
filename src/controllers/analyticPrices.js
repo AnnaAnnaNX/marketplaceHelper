@@ -7,7 +7,7 @@ const upload = multer({ dest: 'upload/' })
 const { getProductLinksToBeParsed, parseDevices } = require('../scripts/analitycPriceFunctions');
 const { writeRowsInExcel } = require('../helpers');
 router.route('/').post( upload.array("multFiles", 10), async (req, res, next) => {
-    // #swagger.description = 'Загрузите файлы Парсинга ЯМ, price'
+    // #swagger.description = 'Аналитика цен. Вх файлы: остатки http://localhost:3000/1_ostatki.xlsx, ссылки http://localhost:3000/2_links.xlsx. Имена файлов должны быть без пробелов! '
     /*
         #swagger.consumes = ['multipart/form-data']
         #swagger.parameters['multFiles'] = {
@@ -43,7 +43,7 @@ router.route('/').post( upload.array("multFiles", 10), async (req, res, next) =>
             ],
             rows
         );
-        `res.download`('./result.xlsx', 'result.xlsx');
+        res.download('./result.xlsx', 'result.xlsx');
     } catch (e) {
         console.log('error on /ym/calcEffByPrice');
         res.status(500);

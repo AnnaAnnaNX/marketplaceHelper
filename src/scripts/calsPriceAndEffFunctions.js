@@ -36,13 +36,15 @@ const universalReadExcelFileNew = async (file, filenameForConstantsFile) => {
         // console.log(nSkuColumn, nColumns);
         // результат в двух вариантах - [col1, col2], {sku1: {все поля}}
         const columns = {};
+        const arr = worksheet.getColumn(nSkuColumn).values;
         columns[info.skuColumnName] = info.formatters && info.formatters['sku']
-            ? worksheet.getColumn(nSkuColumn).values.slice(info.rowBeginProduct).map(info.formatters['sku'])
-            : worksheet.getColumn(nSkuColumn).values.slice(info.rowBeginProduct);
+            ? worksheet.getColumn(nSkuColumn).values.slice(info.rowBeginProduct).map(el => (el.text ? el.text : el)).map(info.formatters['sku'])
+            : worksheet.getColumn(nSkuColumn).values.slice(info.rowBeginProduct).map(el => (el.text ? el.text : el));
         info.columnsNames.forEach((header, i) => {
+            const arr = worksheet.getColumn(nColumns[i]).values;
             columns[header] = info.formatters &&  info.formatters[header]
-                ? worksheet.getColumn(nColumns[i]).values.slice(info.rowBeginProduct).map(info.formatters[header])
-                : worksheet.getColumn(nColumns[i]).values.slice(info.rowBeginProduct);
+                ? worksheet.getColumn(nColumns[i]).values.slice(info.rowBeginProduct).map(el => (el.text ? el.text : el)).map(info.formatters[header])
+                : worksheet.getColumn(nColumns[i]).values.slice(info.rowBeginProduct).map(el => (el.text ? el.text : el));
         })
         return createObjectFromColumns(columns, info.skuColumnName);
     } catch (e) {

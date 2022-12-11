@@ -24,12 +24,8 @@ router.route('/').post( upload.array("multFiles", 10), async (req, res, next) =>
         console.log('files');
         console.log(files);
 
-        // для разработки брать тестовые файлы из папки
-
         // найти код чтения excel-файлов
         const links = await getProductLinksToBeParsed(files);
-        console.log('links');
-        console.log(links);
 
         // найти код парсинга товара по списку ссылок
 

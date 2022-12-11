@@ -13,6 +13,7 @@ const {
     ozonEffByPrice,
     ozonPriceByEff
 } = require('../calculateMarketplaceCommission/index');
+const path = require('path');
 
 const universalReadExcelFileNew = async (file, filenameForConstantsFile) => {
     try {
@@ -20,7 +21,7 @@ const universalReadExcelFileNew = async (file, filenameForConstantsFile) => {
         // прочесть соответсвующие столбцы
         let worksheet = null;
         const workbook = new ExcelJS.Workbook();
-        await workbook.xlsx.readFile(file.path);
+        await workbook.xlsx.readFile(path.resolve(__dirname, file.path));
 
         const info = fileInfoForReadFile[filenameForConstantsFile];
 
@@ -35,11 +36,11 @@ const universalReadExcelFileNew = async (file, filenameForConstantsFile) => {
         // console.log(nSkuColumn, nColumns);
         // результат в двух вариантах - [col1, col2], {sku1: {все поля}}
         const columns = {};
-        columns[info.skuColumnName] = info.formatters['sku']
+        columns[info.skuColumnName] = info.formatters && info.formatters['sku']
             ? worksheet.getColumn(nSkuColumn).values.slice(info.rowBeginProduct).map(info.formatters['sku'])
             : worksheet.getColumn(nSkuColumn).values.slice(info.rowBeginProduct);
         info.columnsNames.forEach((header, i) => {
-            columns[header] = info.formatters[header]
+            columns[header] = info.formatters &&  info.formatters[header]
                 ? worksheet.getColumn(nColumns[i]).values.slice(info.rowBeginProduct).map(info.formatters[header])
                 : worksheet.getColumn(nColumns[i]).values.slice(info.rowBeginProduct);
         })

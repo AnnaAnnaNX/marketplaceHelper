@@ -96,5 +96,5 @@ const parseDevice = {
 
 module.exports = {
     getProductLinksToBeParsed,
-    parseDevices,
+    parseDevices
 }

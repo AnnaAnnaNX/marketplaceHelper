@@ -4,8 +4,8 @@ const router = express.Router()
 const multer = require('multer')
 const upload = multer({ dest: 'upload/' })
 
-const { getProductLinksToBeParsed } = require('../scripts/analitycPriceFunctions');
-
+const { getProductLinksToBeParsed, parseDevices } = require('../scripts/analitycPriceFunctions');
+const { writeRowsInExcel } = require('../helpers');
 router.route('/').post( upload.array("multFiles", 10), async (req, res, next) => {
     // #swagger.description = 'Загрузите файлы Парсинга ЯМ, price'
     /*
@@ -28,13 +28,22 @@ router.route('/').post( upload.array("multFiles", 10), async (req, res, next) =>
         const linksObj = await getProductLinksToBeParsed(files);
 
         // парсинг
-        const prices = await parseDevices(linksObj);
+        const linksAndPricesObj = await parseDevices(linksObj);
 
         // записать результат в файл
-        // const success = await writePrices(linksObj. prices);
-
-        // if (!success) return 'error';
-        // res.download('./result.xlsx', 'result.xlsx');
+        const rows = Object.keys(linksAndPricesObj).map(code => linksAndPricesObj[code]);
+        await writeRowsInExcel(
+            [
+                'Код товара',
+                'Название товара',
+                'ИМ poiskhome.ru price',
+                'ОЗОН poskhome.ru price',
+                'ИМ Мвидео price',
+                'ОЗОН Мвидео price'
+            ],
+            rows
+        );
+        `res.download`('./result.xlsx', 'result.xlsx');
     } catch (e) {
         console.log('error on /ym/calcEffByPrice');
         res.status(500);

@@ -15,6 +15,7 @@ const {
 } = require('../calculateMarketplaceCommission/index');
 const { universalReadExcelFileNew } = require('./calsPriceAndEffFunctions');
 const puppeteer = require('puppeteer');
+const { sleep } = require('../functions');
 
 const getProductLinksToBeParsed = async (files) => {
     try {
@@ -43,11 +44,20 @@ const parseDevices = async (linksObj) => {
 
         // цикл по товарам
         const codes = Object.keys(linksObj);
-        for (const shop of ['ИМ poiskhome.ru', 'ОЗОН poskhome.ru', 'ИМ Мвидео', 'ОЗОН Мвидео']) {
+        for (const shop of [
+            'ИМ poiskhome.ru',
+            'ОЗОН poskhome.ru',
+            'ИМ Мвидео',
+            'ОЗОН Мвидео'
+        ]) {
             for (const code of codes) {
                 linksObj[code];
                 if (linksObj[code][shop]) {
-                    linksObj[code][`${shop} price`] = await parseDevice[shop](page, linksObj[code][shop]);
+                    try {
+                        linksObj[code][`${shop} price`] = await parseDevice[shop](page, linksObj[code][shop]);
+                    } catch (e) {
+                        console.log(`error get price by link ${linksObj[code][shop]}`);
+                    }
                 }
             }
         }
@@ -60,15 +70,28 @@ const parseDevices = async (linksObj) => {
     }
 }
 
+const ozon = async (page, link) => {
+    await page.goto(link);
+    let priceText = await page.$eval('[slot="content"] span>span', el => el.innerText);
+    priceText = priceText.replace(/[&thinsp;|₽| | ]/g, '');
+    return priceText ? parseInt(priceText) : '';
+}
+
 const parseDevice = {
     'ИМ poiskhome.ru': async(page, link) => {
         await page.goto(link);
         const priceText = await page.$eval('.card-new-price', el => el.getAttribute('content'));
-        return priceText ? parseInt(priceText) : '-';
+        return priceText ? parseInt(priceText) : '';
     },
-    'ОЗОН poskhome.ru': async(link) => {return 1;},
-    'ИМ Мвидео': async(link) => {return 1;},
-    'ОЗОН Мвидео': async(link) => {return 1;},
+    'ОЗОН poskhome.ru': ozon,
+    'ИМ Мвидео': async(page, link) => {
+        await page.goto(link);
+        await sleep(1000);
+        let priceText = await page.$eval('mvideoru-product-details-card span.price__main-value', el => el.innerText);
+        priceText = priceText.replace(/[&thinsp;|₽| | | ]/g, '');
+        return priceText ? parseInt(priceText) : '';
+    },
+    'ОЗОН Мвидео': ozon,
 };
 
 module.exports = {

@@ -25,12 +25,15 @@ router.route('/').post( upload.array("multFiles", 10), async (req, res, next) =>
         console.log(files);
 
         // найти код чтения excel-файлов
-        const links = await getProductLinksToBeParsed(files);
+        const linksObj = await getProductLinksToBeParsed(files);
 
-        // найти код парсинга товара по списку ссылок
+        // парсинг
+        const prices = await parseDevices(linksObj);
 
-        // найти код записи в excel-файл
+        // записать результат в файл
+        // const success = await writePrices(linksObj. prices);
 
+        // if (!success) return 'error';
         // res.download('./result.xlsx', 'result.xlsx');
     } catch (e) {
         console.log('error on /ym/calcEffByPrice');

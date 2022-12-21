@@ -4,7 +4,7 @@ const router = express.Router()
 const multer = require('multer')
 const upload = multer({ dest: 'upload/' })
 
-const { getProductLinks, parseDevices } = require('../scripts/poishomeFunctions');
+const { getProductLinks, parseLinks } = require('../scripts/poishomeFunctions');
 const { writeRowsInExcel } = require('../helpers');
 router.route('/getLinks').post( upload.array("multFiles", 10), async (req, res, next) => {
     // #swagger.description = 'Аналитика цен. Вх файлы: остатки http://localhost:3000/1_ostatki.xlsx, ссылки http://localhost:3000/2_links.xlsx. Имена файлов должны быть без пробелов! '
@@ -28,24 +28,18 @@ router.route('/getLinks').post( upload.array("multFiles", 10), async (req, res, 
         const links = await getProductLinks(files);
 
         // парсинг
-        const linksAndPricesObj = await parseDevices(linksObj);
+        const linksProducts = await parseLinks(links);
 
         // записать результат в файл
-        const rows = Object.keys(linksAndPricesObj).map(code => linksAndPricesObj[code]);
         await writeRowsInExcel(
             [
-                'Код товара',
-                'Название товара',
-                'ИМ poiskhome.ru price',
-                'ОЗОН poskhome.ru price',
-                'ИМ Мвидео price',
-                'ОЗОН Мвидео price'
+                'link'
             ],
-            rows
+            linksProducts.map(link => ({ link }))
         );
         res.download('./result.xlsx', 'result.xlsx');
     } catch (e) {
-        console.log('error on /ym/calcEffByPrice');
+        console.log('error on /getLinks');
         res.status(500);
     }
 })

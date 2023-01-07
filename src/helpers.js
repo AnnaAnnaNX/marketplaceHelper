@@ -4,6 +4,7 @@ const puppeteer = require('puppeteer');
 const { typeFilesWithFields } = require('./consts.json');
 const { shops } = require('./consts.json');
 const fs = require('fs');
+const { v4: uuidv4 } = require('uuid');
 
 const writeNamesAndPrices = async (content) => {
     try {
@@ -84,9 +85,9 @@ const writeProductLink = async (content) => {
 
 const writeRowsInExcel = async (headers, rows) => {
     try {
-        try {
-            fs.unlinkSync(path.join(__dirname, '../result.xlsx'));
-        } catch(e) {}
+        // try {
+        //     fs.unlinkSync(path.join(__dirname, '../result.xlsx'));
+        // } catch(e) {}
 
         // const headers = req && req.body && req.body.headers;
         // const rows = req && req.body && req.body.rows;
@@ -98,7 +99,8 @@ const writeRowsInExcel = async (headers, rows) => {
 
         const workbook = new ExcelJS.Workbook();
         const worksheet = workbook.addWorksheet('Ассортимент');
-        const filePath = path.join(__dirname, '../result.xlsx');
+        // const filePath = path.join(__dirname, '../result.xlsx');
+        const filePath = path.join(__dirname, '../', 'results', `${uuidv4()}.xlsx`);
 
         const headersArr = headers.map(el => (el.value ? el.value : el));
         const rowsArr = rows.map(row => {

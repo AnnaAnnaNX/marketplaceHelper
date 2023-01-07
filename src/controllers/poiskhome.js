@@ -4,7 +4,7 @@ const router = express.Router()
 const multer = require('multer')
 const upload = multer({ dest: 'upload/' })
 
-const { getProductLinks, parseLinks } = require('../scripts/poishomeFunctions');
+const { getProductLinks, parseLinks, parseCharacteristics } = require('../scripts/poishomeFunctions');
 const { writeRowsInExcel } = require('../helpers');
 router.route('/getLinks').post( upload.array("multFiles", 10), async (req, res, next) => {
     // #swagger.description = 'Аналитика цен. Вх файлы: остатки http://localhost:3000/1_ostatki.xlsx, ссылки http://localhost:3000/2_links.xlsx. Имена файлов должны быть без пробелов! '
@@ -66,18 +66,26 @@ router.route('/getCharacteristics').post( upload.array("multFiles", 10), async (
         const links = await getProductLinks(files);
 
         // парсинг
-        const linksAndPricesObj = await parseDevices(links);
+        const linksAndPricesObj = await parseCharacteristics(links);
 
         // записать результат в файл
         const rows = Object.keys(linksAndPricesObj).map(code => linksAndPricesObj[code]);
+        console.log(rows);
         await writeRowsInExcel(
             [
-                'Код товара',
-                'Название товара',
-                'ИМ poiskhome.ru price',
-                'ОЗОН poskhome.ru price',
-                'ИМ Мвидео price',
-                'ОЗОН Мвидео price'
+                'link',
+                'name',
+                'category1',
+                'category1Link',
+                'category2',
+                'category2Link',
+                'category3',
+                'category3Link',
+                'price',
+                'characteristics',
+                'photosText',
+                'countPhotos',
+                'realNamePhotos'
             ],
             rows
         );

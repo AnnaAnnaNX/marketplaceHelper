@@ -6,7 +6,7 @@ const { writeRowsInExcel } = require("../helpers");
 const fs = require('fs');
 const path = require('path');
 const { sleep } = require('../functions');
-const { getProductLinks, parseLinks } = require("../scripts/poishomeFunctions");
+const { getProductLinks, parseLinks, parseCharacteristics, download } = require("../scripts/poishomeFunctions");
 
 const arr =
     ["https://poiskhome.ru/ProductList/Apple_iPhone_334", "https://poiskhome.ru/ProductList/Smartfony_345", "https://poiskhome.ru/ProductList/Mobilnye_telefony_84", "https://poiskhome.ru/ProductList/CHasy_Braslety_Zdorove_344", "https://poiskhome.ru/ProductList/Planshetnye_PK_443", "https://poiskhome.ru/ProductList/Aksessuary_dlya_planshetnyh_kompyuterov_166", "https://poiskhome.ru/ProductList/Portativnaya_Akustika_341", "https://poiskhome.ru/ProductList/Naushniki_249"];
@@ -103,10 +103,26 @@ test('parseLinks', async () => {
     );
     expect(result).toEqual(iphones);
 }, 1000_000);
+test('parseCharacteristics', async () => {
+    console.log('parseLinks');
+    const result = await parseCharacteristics(
+    [
+            'https://poiskhome.ru/Product/371156',
+            'https://poiskhome.ru/Product/365004',
+            'https://poiskhome.ru/Product/372529',
+            'https://poiskhome.ru/Product/294799',
+            'https://poiskhome.ru/Product/318023'
+          ]
+    );
+    expect(result).toEqual(iphones);
+}, 1000_000);
 
-
-
-
-
+test('load file', async () => {
+    console.log('load file');
+    const result = await download(
+        'https://poiskhome.ru//Content/img/products/1000000/400000/80000/3000/600/30/0372529/Galery/2/700X700.jpg',
+    );
+    expect(result).toEqual(iphones);
+}, 1000_000);
 
 

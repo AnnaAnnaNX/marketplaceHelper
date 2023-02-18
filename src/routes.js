@@ -12,6 +12,9 @@ const ozonKonkurentyScripts = require('./controllers/ozonKonkurentyScripts')
 const ymProfitGetPersentScripts = require('./controllers/ymProfitGetPersentScripts')
 const ymRenewAmountScripts = require('./controllers/ymRenewAmountScripts')
 const ymRenewPriceScripts = require('./controllers/ymRenewPriceScripts')
+const findPriceForMarketplaceScripts = require('./controllers/findPriceForMarketplace')
+const analyticPricesScripts = require('./controllers/analyticPrices')
+const poiskhomeGetLinksScripts = require('./controllers/poiskhome')
 
 router.use('/scripts', scripts)
 router.use('/rndScripts', rndScripts)
@@ -21,6 +24,9 @@ router.use('/ozonKonkurenty', ozonKonkurentyScripts)
 router.use('/ymProfitGetPersent', ymProfitGetPersentScripts)
 router.use('/ymRenewAmount', ymRenewAmountScripts)
 router.use('/ymRenewPrice', ymRenewPriceScripts)
+router.use('/findPriceForMarketplace', findPriceForMarketplaceScripts)
+router.use('/analytic-prices', analyticPricesScripts)
+router.use('/poiskhome', poiskhomeGetLinksScripts)
 
 
 function store(req, res) {

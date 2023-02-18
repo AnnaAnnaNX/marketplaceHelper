@@ -197,6 +197,240 @@
           }
         }
       }
+    },
+    "/ymRenewAmount/": {
+      "post": {
+        "description": "Обновление остатков YM. Note: .xls need save as .xlsx. Шаблон для остатков - http://localhost:3000/ymRenewSetAmount.xlsx",
+        "consumes": [
+          "multipart/form-data"
+        ],
+        "parameters": [
+          {
+            "name": "multFiles",
+            "in": "formData",
+            "type": "array",
+            "required": true,
+            "description": "Загрузить файл с данными",
+            "collectionFormat": "multi",
+            "items": {
+              "type": "file"
+            }
+          }
+        ],
+        "responses": {
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/ymRenewPrice/": {
+      "post": {
+        "description": "Обновление цен YM. Note: .xls need save as .xlsx. Шаблон для остатков - http://localhost:3000/ymRenewSetAmount.xlsx",
+        "consumes": [
+          "multipart/form-data"
+        ],
+        "parameters": [
+          {
+            "name": "multFiles",
+            "in": "formData",
+            "type": "array",
+            "required": true,
+            "description": "Загрузить файл с данными",
+            "collectionFormat": "multi",
+            "items": {
+              "type": "file"
+            }
+          }
+        ],
+        "responses": {
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/findPriceForMarketplace/ym/calcEffByPrice": {
+      "post": {
+        "description": "Загрузите файлы Парсинга ЯМ, price",
+        "consumes": [
+          "multipart/form-data"
+        ],
+        "parameters": [
+          {
+            "name": "multFiles",
+            "in": "formData",
+            "type": "array",
+            "required": true,
+            "description": "Загрузить файл с данными",
+            "collectionFormat": "multi",
+            "items": {
+              "type": "file"
+            }
+          }
+        ],
+        "responses": {
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/findPriceForMarketplace/ym/calcPriceByEff": {
+      "post": {
+        "description": "Загрузите файлы Парсинга ЯМ, eff. ! Только для МГ",
+        "consumes": [
+          "multipart/form-data"
+        ],
+        "parameters": [
+          {
+            "name": "multFiles",
+            "in": "formData",
+            "type": "array",
+            "required": true,
+            "description": "Загрузить файл с данными",
+            "collectionFormat": "multi",
+            "items": {
+              "type": "file"
+            }
+          }
+        ],
+        "responses": {
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/findPriceForMarketplace/ozon/calcEffByPrice": {
+      "post": {
+        "description": "Загрузите файлы Закупка, Шаблон цен, price",
+        "consumes": [
+          "multipart/form-data"
+        ],
+        "parameters": [
+          {
+            "name": "multFiles",
+            "in": "formData",
+            "type": "array",
+            "required": true,
+            "description": "Загрузить файл с данными",
+            "collectionFormat": "multi",
+            "items": {
+              "type": "file"
+            }
+          }
+        ],
+        "responses": {
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/findPriceForMarketplace/ozon/calcPriceByEff": {
+      "post": {
+        "description": "Загрузите файлы Закупка, Шаблон цен, eff",
+        "consumes": [
+          "multipart/form-data"
+        ],
+        "parameters": [
+          {
+            "name": "multFiles",
+            "in": "formData",
+            "type": "array",
+            "required": true,
+            "description": "Загрузить файл с данными",
+            "collectionFormat": "multi",
+            "items": {
+              "type": "file"
+            }
+          }
+        ],
+        "responses": {
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/analytic-prices/": {
+      "post": {
+        "description": "Аналитика цен. Вх файлы: остатки http://localhost:3000/1_ostatki.xlsx, ссылки http://localhost:3000/2_links.xlsx. Имена файлов должны быть без пробелов! ",
+        "consumes": [
+          "multipart/form-data"
+        ],
+        "parameters": [
+          {
+            "name": "multFiles",
+            "in": "formData",
+            "type": "array",
+            "required": true,
+            "description": "Загрузить файл с данными",
+            "collectionFormat": "multi",
+            "items": {
+              "type": "file"
+            }
+          }
+        ],
+        "responses": {
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/poiskhome/getLinks": {
+      "post": {
+        "description": "Аналитика цен. Вх файлы: остатки http://localhost:3000/1_ostatki.xlsx, ссылки http://localhost:3000/2_links.xlsx. Имена файлов должны быть без пробелов! ",
+        "consumes": [
+          "multipart/form-data"
+        ],
+        "parameters": [
+          {
+            "name": "multFiles",
+            "in": "formData",
+            "type": "array",
+            "required": true,
+            "description": "Загрузить файл с данными - текстовый файл - каждая ссылка на группу на новой строке",
+            "collectionFormat": "multi",
+            "items": {
+              "type": "file"
+            }
+          }
+        ],
+        "responses": {
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/poiskhome/getCharacteristics": {
+      "post": {
+        "description": "Аналитика цен. Вх файлы: остатки http://localhost:3000/1_ostatki.xlsx, ссылки http://localhost:3000/2_links.xlsx. Имена файлов должны быть без пробелов! ",
+        "consumes": [
+          "multipart/form-data"
+        ],
+        "parameters": [
+          {
+            "name": "multFiles",
+            "in": "formData",
+            "type": "array",
+            "required": true,
+            "description": "Загрузить файл с данными - ссылки на товар - простой текстовый файл - каждый ссылка на новой строке",
+            "collectionFormat": "multi",
+            "items": {
+              "type": "file"
+            }
+          }
+        ],
+        "responses": {
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
     }
   },
   "definitions": {

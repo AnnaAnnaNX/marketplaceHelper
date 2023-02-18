@@ -1,6 +1,8 @@
 const ExcelJS = require('exceljs');
 const { fileInfoForReadFile, templates } = require('./consts.js');
 
+const normalizeCell = (el) => (el ? el.toString().trim() : el)
+
 const normalizeCells = (cells) => {
     return cells
         ? cells.map((el) => (el ? el.toString().trim() : el))
@@ -13,13 +15,13 @@ const getNumberColumnByHeaders = (skuColumnName, headers, allHeaders) => {
     return {nSkuColumn, nColumns};
 }
 
-const createObjectFromColumns = (columns) => {
+const createObjectFromColumns = (columns, skuColumnName) => {
     const headers = Object.keys(columns);
     const resultObj = {};
-    columns['sku'].forEach((val, i) => {
+    columns[skuColumnName].forEach((val, i) => {
         const obj = {};
         headers.map((header) => {
-            obj[header] = columns[header][i];
+            obj[header] = normalizeCell(columns[header][i]);
         });
         resultObj[val] = obj;
     });
@@ -45,23 +47,30 @@ const uniqueReadExcelFile = async (file, filenameForConstantsFile) => {
         console.log(nSkuColumn, nColumns);   
         // результат в двух вариантах - [col1, col2], {sku1: {все поля}}
         const columns = {};
-        columns['sku'] = info.foratters['sku']
-            ? worksheet.getColumn(nSkuColumn).values.slice(info.rowBeginProduct).map(info.foratters['sku'])
+        columns['sku'] = info.formatters['sku']
+            ? worksheet.getColumn(nSkuColumn).values.slice(info.rowBeginProduct).map(info.formatters['sku'])
             : worksheet.getColumn(nSkuColumn).values.slice(info.rowBeginProduct);
         info.columnsNames.forEach((header, i) => {
-            columns[header] = info.foratters[header]
-                ? worksheet.getColumn(nColumns[i]).values.slice(info.rowBeginProduct).map(info.foratters[header])
+            columns[header] = info.formatters[header]
+                ? worksheet.getColumn(nColumns[i]).values.slice(info.rowBeginProduct).map(info.formatters[header])
                 : worksheet.getColumn(nColumns[i]).values.slice(info.rowBeginProduct);
         })
-        return {columns, object: createObjectFromColumns(columns)};
+        return {columns, object: createObjectFromColumns(columns, info.skuColumnName)};
     } catch (e) {
         console.log(e);
     }
+}
+
+const setMinMax = (val, minimum, maximum) => {
+    if (val < minimum) return minimum;
+    if (val > maximum) return maximum;
+    return val;
 }
 
 module.exports = {
     uniqueReadExcelFile,
     createObjectFromColumns,
     getNumberColumnByHeaders,
-    normalizeCells 
+    normalizeCells,
+    setMinMax
 }

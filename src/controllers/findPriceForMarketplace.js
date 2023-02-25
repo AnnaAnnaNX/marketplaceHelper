@@ -8,7 +8,7 @@ const router = express.Router()
 const multer = require('multer')
 const upload = multer({ dest: 'upload/' })
 
-const { createUnionAssort, ymCalculateEff, ymCalculatePrice, ozonCalculateEff, ozonCalculatePrice } = require('../scripts/calsPriceAndEffFunctions');
+const { createUnionAssort, ymCalculateEff, ymCalculatePrice, ozonCalculateEff, ozonCalculatePrice, reorderFiles } = require('../scripts/calsPriceAndEffFunctions');
 
 const { writeRowsInExcel } = require('../helpers');
 
@@ -26,7 +26,7 @@ router.route('/ym/calcEffByPrice').post( upload.array("multFiles", 10), async (r
         }
      */
     try {
-        const files = req.files;
+        const files = await reorderFiles(['парсинг ЯМ', 'цены'], req.files);
         console.log('files');
         console.log(files);
 
@@ -65,7 +65,7 @@ router.route('/ym/calcPriceByEff').post( upload.array("multFiles", 10), async (r
         }
      */
     try {
-        const files = req.files;
+        const files = await reorderFiles(['парсинг ЯМ', 'процент эффективности'], req.files);
         console.log('files');
         console.log(files);
 
@@ -104,7 +104,7 @@ router.route('/ozon/calcEffByPrice').post( upload.array("multFiles", 10), async 
         }
      */
     try {
-        const files = req.files;
+        const files = await reorderFiles(['закупка Ozon', 'шаблон цен Ozon', 'цены'], req.files);
         console.log('files');
         console.log(files);
 
@@ -143,7 +143,7 @@ router.route('/ozon/calcPriceByEff').post( upload.array("multFiles", 10), async 
         }
      */
     try {
-        const files = req.files;
+        const files = await reorderFiles(['закупка Ozon', 'шаблон цен Ozon', 'процент эффективности'], req.files);
         console.log('files');
         console.log(files);
 

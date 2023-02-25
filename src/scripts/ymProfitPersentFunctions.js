@@ -65,7 +65,7 @@ const durationPause = 1000;
         listParams.persent= ['persent'];
         listParams.delivery = ['delivery'];
 
-        let i = 1; // begin page
+        let i = 2; // begin page
         let elsCount = 0;
         do {
             try {
@@ -75,7 +75,6 @@ const durationPause = 1000;
               if (!await checkExistance(page, selectorRow)) break;
               elsCount = await page.$$eval(selectorRow, els => els.length);
 
-              // elsCount = 5; // debug
               if (elsCount) {
                 for(let j = 1; j <= elsCount; j++) {
                   const name = await page.$eval(selectorNameByN(j), el => el.innerText);

@@ -227,11 +227,45 @@ const ozonCalculatePrice = (assort) => {
     }
 }
 
+const reorderFiles = async (filesOrder, realFiles) => {
+  try {
+    // const filesOrder = ['парсинг ЯМ', 'процент эффективности']
+    const tabsForFilesOrder = ['парсинг ЯМ', 'процент эффективности']
+      .map(fileName => (fileInfoForReadFile[fileName].tagName))
+
+    // get realFileTabNames
+    // read files in circle
+    const workbook = new ExcelJS.Workbook();
+    let realFileTabs = []
+    for(const file of realFiles){
+      const excelFile = await workbook.xlsx.readFile(file.path)
+      const tabs = workbook._worksheets.map(tab => (tab?.name)).filter(el => el)
+      realFileTabs.push(tabs)
+    }
+
+    const files = []
+    for(const requiredTab of tabsForFilesOrder){
+      for(const [i, tabs] of Object.entries(realFileTabs)) {
+        if (tabs.includes(requiredTab)) {
+          files.push(realFiles[i])
+          realFileTabs = [...realFileTabs.slice(0, i), ...realFileTabs.slice(i+1, realFileTabs.length)]
+          break
+        }
+      }
+    }
+    return files
+  } catch(e) {
+    console.log(e)
+    throw new Error()
+  }
+}
+
 module.exports = {
     createUnionAssort,
     ymCalculateEff,
     ymCalculatePrice,
     ozonCalculateEff,
     ozonCalculatePrice,
-    universalReadExcelFileNew
+    universalReadExcelFileNew,
+    reorderFiles
 }

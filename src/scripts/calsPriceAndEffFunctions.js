@@ -230,7 +230,7 @@ const ozonCalculatePrice = (assort) => {
 const reorderFiles = async (filesOrder, realFiles) => {
   try {
     // const filesOrder = ['парсинг ЯМ', 'процент эффективности']
-    const tabsForFilesOrder = ['парсинг ЯМ', 'процент эффективности']
+    const tabsForFilesOrder = filesOrder
       .map(fileName => (fileInfoForReadFile[fileName].tagName))
 
     // get realFileTabNames
@@ -248,7 +248,8 @@ const reorderFiles = async (filesOrder, realFiles) => {
       for(const [i, tabs] of Object.entries(realFileTabs)) {
         if (tabs.includes(requiredTab)) {
           files.push(realFiles[i])
-          realFileTabs = [...realFileTabs.slice(0, i), ...realFileTabs.slice(i+1, realFileTabs.length)]
+          realFileTabs = [...realFileTabs.slice(0, i), ...realFileTabs.slice(i, realFileTabs.length)]
+          realFiles = [...realFiles.slice(0, i), ...realFiles.slice(i, realFileTabs.length)]
           break
         }
       }

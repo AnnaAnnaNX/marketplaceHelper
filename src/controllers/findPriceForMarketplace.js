@@ -26,11 +26,12 @@ router.route('/ym/calcEffByPrice').post( upload.array("multFiles", 10), async (r
         }
      */
     try {
+      console.log('files1');
+      console.log(req.files);
         const files = await reorderFiles(['парсинг ЯМ', 'цены'], req.files);
-        console.log('files');
-        console.log(files);
+      // const files = req.files;
 
-        const assort = await createUnionAssort(files, ['парсинг ЯМ', 'цены']);
+      const assort = await createUnionAssort(files, ['парсинг ЯМ', 'цены']);
         console.log(assort);
 
         const resultArayWithEff = ymCalculateEff(assort);
@@ -104,6 +105,8 @@ router.route('/ozon/calcEffByPrice').post( upload.array("multFiles", 10), async 
         }
      */
     try {
+      console.log('files');
+      console.log(req.files);
         const files = await reorderFiles(['закупка Ozon', 'шаблон цен Ozon', 'цены'], req.files);
         console.log('files');
         console.log(files);
@@ -143,6 +146,8 @@ router.route('/ozon/calcPriceByEff').post( upload.array("multFiles", 10), async 
         }
      */
     try {
+      console.log('files');
+      console.log(req.files);
         const files = await reorderFiles(['закупка Ozon', 'шаблон цен Ozon', 'процент эффективности'], req.files);
         console.log('files');
         console.log(files);

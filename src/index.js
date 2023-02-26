@@ -11,6 +11,7 @@
 const swaggerUi = require('swagger-ui-express')
 const swaggerFile = require('../swagger_output.json')
 const express = require('express')
+const cors = require('cors')
 const app = express()
 
 
@@ -21,6 +22,9 @@ app.use(express.static(__dirname + '/inputFiles'));
 const router = require('./routes')
 
 /* Middlewares */
+app.use(cors({
+  origin: '*'
+}))
 app.use(router)
 app.use('/doc', swaggerUi.serve, swaggerUi.setup(swaggerFile))
 

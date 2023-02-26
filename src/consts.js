@@ -93,7 +93,7 @@ const fileInfoForReadFile = {
         formatters: {}
     },
     'процент эффективности': {
-        tagName: 'Лист1',
+        tagName: 'Эффективность',
         rowHeader: 1,
         rowBeginProduct: 2,
         columnsNames: ['Артикул', 'Эффективность'],

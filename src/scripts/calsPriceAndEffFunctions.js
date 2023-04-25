@@ -239,7 +239,7 @@ const reorderFiles = async (filesOrder, realFiles) => {
     let realFileTabs = []
     for(const file of realFiles){
       const excelFile = await workbook.xlsx.readFile(file.path)
-      const tabs = workbook._worksheets.map(tab => (tab?.name)).filter(el => el)
+      const tabs = workbook._worksheets.map(tab => (tab.name)).filter(el => el)
       realFileTabs.push(tabs)
     }
 

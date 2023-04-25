@@ -124,6 +124,22 @@ const fileInfoForReadFile = {
         skuColumnName: 'Код товара',
         formatters: {}
     },
+    'Прайс ПОИСК.xlsx': {
+        tagName: 'Sheet',
+        rowHeader: 1,
+        rowBeginProduct: 2,
+        columnsNames: ['Код товара', '№ ПС', 'Ост-к'],
+        skuColumnName: 'Код товара',
+        formatters: {}
+    },
+    'Ассортимент Яндекс.xlsx': {
+        tagName: 'Список товаров',
+        rowHeader: 2,
+        rowBeginProduct: 4,
+        columnsNames: ['Ваш SKU *'],
+        skuColumnName: 'Ваш SKU *',
+        formatters: {}
+    },
 };
 
 const templates = {

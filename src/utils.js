@@ -36,10 +36,10 @@ const uniqueReadExcelFile = async (file, filenameForConstantsFile) => {
         const workbook = new ExcelJS.Workbook();
         await workbook.xlsx.readFile(file.path);
         
-        const info = fileInfoForReadFile["Прайс-лист ИП Булюнов Артём Мусаевич"];
+        const info = fileInfoForReadFile[filenameForConstantsFile];
 
-        // worksheet = await workbook.getWorksheet(info.tagName);
-        worksheet = workbook.worksheets[0];
+        worksheet = await workbook.getWorksheet(info.tagName);
+        // worksheet = workbook.worksheets[0];
         // найти номера столбцов, и соотвествующими заголовками
         const headerRow = normalizeCells(worksheet.getRow(info.rowHeader).values);
         console.log(headerRow);

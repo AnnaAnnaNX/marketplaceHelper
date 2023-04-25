@@ -431,6 +431,32 @@
           }
         }
       }
+    },
+    "/set-leftovers/": {
+      "post": {
+        "description": "Получение остатков по складам.",
+        "consumes": [
+          "multipart/form-data"
+        ],
+        "parameters": [
+          {
+            "name": "multFiles",
+            "in": "formData",
+            "type": "array",
+            "required": true,
+            "description": "Загрузить файл с данными",
+            "collectionFormat": "multi",
+            "items": {
+              "type": "file"
+            }
+          }
+        ],
+        "responses": {
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
     }
   },
   "definitions": {

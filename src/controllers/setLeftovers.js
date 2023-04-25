@@ -24,14 +24,14 @@ const { shops } = require('../consts.json');
 const { setLeftovers } = require('../scripts/setLeftoversFunctions');
 
 router.route('/').post( upload.array("multFiles", 10), async (req, res, next) => {
-    // #swagger.description = 'Получение остатков по складам.'
+    // #swagger.description = 'Начисление остатков по складам для YM.'
     /*
         #swagger.consumes = ['multipart/form-data']  
         #swagger.parameters['multFiles'] = {
             in: 'formData',
             type: 'array',
             required: true,
-            description: 'Загрузить файл с данными',
+            description: 'Входные файлы: Прайс ПОИСК.xlsx, Ассортимент Яндекс.xlsx',
             collectionFormat: 'multi',
             items: { type: 'file' }
         }
@@ -57,7 +57,7 @@ router.route('/').post( upload.array("multFiles", 10), async (req, res, next) =>
         res.zip(listFiles);
         // res.download('result.xlsx', 'result.xlsx');
     } catch (e) {
-        console.log('error on YM-маржа');
+        console.log('error on setLeftovers');
         console.log(e);
         res.status(500);
     }

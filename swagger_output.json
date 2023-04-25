@@ -434,7 +434,7 @@
     },
     "/set-leftovers/": {
       "post": {
-        "description": "Получение остатков по складам.",
+        "description": "Начисление остатков по складам для YM.",
         "consumes": [
           "multipart/form-data"
         ],
@@ -444,7 +444,7 @@
             "in": "formData",
             "type": "array",
             "required": true,
-            "description": "Загрузить файл с данными",
+            "description": "Входные файлы: Прайс ПОИСК.xlsx, Ассортимент Яндекс.xlsx",
             "collectionFormat": "multi",
             "items": {
               "type": "file"

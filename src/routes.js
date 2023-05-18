@@ -15,6 +15,7 @@ const ymRenewPriceScripts = require('./controllers/ymRenewPriceScripts')
 const findPriceForMarketplaceScripts = require('./controllers/findPriceForMarketplace')
 const analyticPricesScripts = require('./controllers/analyticPrices')
 const poiskhomeGetLinksScripts = require('./controllers/poiskhome')
+const setLeftoversScripts = require('./controllers/setLeftovers')
 
 router.use('/scripts', scripts)
 router.use('/rndScripts', rndScripts)
@@ -27,6 +28,7 @@ router.use('/ymRenewPrice', ymRenewPriceScripts)
 router.use('/findPriceForMarketplace', findPriceForMarketplaceScripts)
 router.use('/analytic-prices', analyticPricesScripts)
 router.use('/poiskhome', poiskhomeGetLinksScripts)
+router.use('/set-leftovers', setLeftoversScripts)
 
 
 function store(req, res) {

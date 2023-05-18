@@ -431,6 +431,32 @@
           }
         }
       }
+    },
+    "/set-leftovers/": {
+      "post": {
+        "description": "Начисление остатков по складам для YM.",
+        "consumes": [
+          "multipart/form-data"
+        ],
+        "parameters": [
+          {
+            "name": "multFiles",
+            "in": "formData",
+            "type": "array",
+            "required": true,
+            "description": "Входные файлы: Прайс ПОИСК.xlsx, Ассортимент Яндекс.xlsx",
+            "collectionFormat": "multi",
+            "items": {
+              "type": "file"
+            }
+          }
+        ],
+        "responses": {
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
     }
   },
   "definitions": {

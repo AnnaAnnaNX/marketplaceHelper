@@ -39,12 +39,24 @@ router.route('/').post( upload.array("multFiles", 1), async (req, res, next) => 
             type: 'string',
             required: false,
         }
+        #swagger.parameters['startPage'] = {
+            in: 'formData',
+            type: 'string',
+            required: false,
+        }        
+        #swagger.parameters['numberOfPage'] = {
+            in: 'formData',
+            type: 'string',
+            required: false,
+        }
      */
     try {
         const inputParams = {};
         inputParams.login = (req.body && req.body.login) || 'AnnaAnnaNX@yandex.ru';
         inputParams.password = (req.body && req.body.password) || 'Visuzu54';
         inputParams.assortimentLink = (req.body && req.body.assortimentLink) || 'https://partner.market.yandex.ru/supplier/26020183/assortment';
+        inputParams.startPage = (req.body && req.body.startPage) || 1;
+        inputParams.numberOfPage = (req.body && req.body.numberOfPage) || 1000;
             
         const persentProducts = await parsePersentProducts(inputParams);
 

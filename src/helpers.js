@@ -398,8 +398,8 @@ const checkExistance = async (page, selector) => {
     } catch(e) {}
     const elsCount = await page.$$eval(selector, els => els.length);
   
-    console.log('elsCount length');
-    console.log(elsCount);
+    // console.log('elsCount length');
+    // console.log(elsCount);
     if (!elsCount) {
       console.log('there are not tag for '+selector+' selector');
       return null;

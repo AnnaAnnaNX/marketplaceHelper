@@ -173,6 +173,18 @@
             "required": false
           },
           {
+            "name": "startPage",
+            "in": "formData",
+            "type": "string",
+            "required": false
+          },
+          {
+            "name": "numberOfPage",
+            "in": "formData",
+            "type": "string",
+            "required": false
+          },
+          {
             "name": "body",
             "in": "body",
             "schema": {
@@ -185,6 +197,12 @@
                   "example": "any"
                 },
                 "assortimentLink": {
+                  "example": "any"
+                },
+                "startPage": {
+                  "example": "any"
+                },
+                "numberOfPage": {
                   "example": "any"
                 }
               }
@@ -322,9 +340,6 @@
           }
         ],
         "responses": {
-          "200": {
-            "description": "OK"
-          },
           "500": {
             "description": "Internal Server Error"
           }
@@ -351,9 +366,6 @@
           }
         ],
         "responses": {
-          "200": {
-            "description": "OK"
-          },
           "500": {
             "description": "Internal Server Error"
           }

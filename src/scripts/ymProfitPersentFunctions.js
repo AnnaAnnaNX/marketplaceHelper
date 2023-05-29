@@ -218,7 +218,7 @@ const durationPause = 1000;
 
       statusSelector: (N) => (`[data-e2e="tableRow"]:nth-child(${N}) td:nth-child(5)`),
 
-      summSelector: (N) => (`[data-e2e="tableRow"]:nth-child(${N}) td:nth-child(5)`),
+      summSelector: (N) => (`[data-e2e="tableRow"]:nth-child(${N}) td:nth-child(6)`),
         // ₽
 
       shop1Selector: (N) => (`[data-e2e="tableRow"]:nth-child(${N}) td:nth-child(7) [class^=___unit]:first-child`),

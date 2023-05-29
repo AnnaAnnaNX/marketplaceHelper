@@ -207,27 +207,29 @@ const durationPause = 1000;
 
 
   // selectors table
-    const type1Selector = `[data-e2e="tableRow"]:nth-child(${N}) td:nth-child(1) button`; // click for popup
-    const type2Selector = `[data-e2e="tableRow"]:nth-child(${N}) td:nth-child(1)  .style-offerName___ovtNd`;
-    const type3Selector = `[data-e2e="tableRow"]:nth-child(${N}) td:nth-child(1)  span>[data-e2e-i18n-key]`;
+    const parseReturnsSelectors = {
+      type1Selector: (N) => (`[data-e2e="tableRow"]:nth-child(${N}) td:nth-child(1) button`), // click for popup
+      type2Selector: (N) => (`[data-e2e="tableRow"]:nth-child(${N}) td:nth-child(1)  .style-offerName___ovtNd`),
+      type3Selector: (N) => (`[data-e2e="tableRow"]:nth-child(${N}) td:nth-child(1)  span>[data-e2e-i18n-key]`),
 
-    const createdSelector = `[data-e2e="tableRow"]:nth-child(${N}) td:nth-child(2) [data-e2e="return-created-date"]`;
-    const updatedSelector = `[data-e2e="tableRow"]:nth-child(${N}) td:nth-child(2) div+ div>.___Tag___XnCAY`;
+      createdSelector: (N) => (`[data-e2e="tableRow"]:nth-child(${N}) td:nth-child(2) [data-e2e="return-created-date"]`),
+      updatedSelector: (N) => (`[data-e2e="tableRow"]:nth-child(${N}) td:nth-child(2) div+ div>.___Tag___XnCAY`),
 
-    const numberOrderSelector = `[data-e2e="tableRow"]:nth-child(${N}) td:nth-child(3)`;
+      numberOrderSelector: (N) => (`[data-e2e="tableRow"]:nth-child(${N}) td:nth-child(3)`),
 
-    const statusSelector = `[data-e2e="tableRow"]:nth-child(${N}) td:nth-child(5)`;
+      statusSelector: (N) => (`[data-e2e="tableRow"]:nth-child(${N}) td:nth-child(5)`),
 
-    const summSelector = `[data-e2e="tableRow"]:nth-child(${N}) td:nth-child(5)`;
-      // ₽
+      summSelector: (N) => (`[data-e2e="tableRow"]:nth-child(${N}) td:nth-child(5)`),
+        // ₽
 
-    const shop1Selector = `[data-e2e="tableRow"]:nth-child(${N}) td:nth-child(7) [class^=___unit]:first-child`;
-    const shop2Selector = `[data-e2e="tableRow"]:nth-child(${N}) td:nth-child(7) [class^=___unit]:last-child`;
+      shop1Selector: (N) => (`[data-e2e="tableRow"]:nth-child(${N}) td:nth-child(7) [class^=___unit]:first-child`),
+      shop2Selector: (N) => (`[data-e2e="tableRow"]:nth-child(${N}) td:nth-child(7) [class^=___unit]:last-child`),
 
-  // selectors popup
-    const dataRetutnSelector = `[role="radiogroup"] + div .___root_k72io_1 .___root_k72io_1`;
-	  const reasonRetutnSelector = `[data-e2e="return-drawer-content"] tbody tr>td:nth-child(2)>[data-tid-prop]`;
-    const closePopupSelector = `[aria-label="Закрыть"]`;
+    // selectors popup
+      dataRetutnSelector: `[role="radiogroup"] + div .___root_k72io_1 .___root_k72io_1`,
+      reasonRetutnSelector: `[data-e2e="return-drawer-content"] tbody tr>td:nth-child(2)>[data-tid-prop]`,
+      closePopupSelector: `[aria-label="Закрыть"]`,
+    }
 
   const parseReturns = async (inputParams) => {
     try {
@@ -243,23 +245,22 @@ const durationPause = 1000;
         page = result.page;
 
         const listParams = {}
-        listParams.type1 = 'type1';
-        listParams.type2 = 'type2';
-        listParams.type3 = 'type3';
-    
-        listParams.created = 'created';
-        listParams.updated = 'updated';
-
-        listParams.numberOrder = 'numberOrder';
-    
-        listParams.status = 'status';
-        listParams.summ = 'summ';
-        
-        listParams.shop1 = 'shop1';
-        listParams.shop2 = 'shop2';
-
-        listParams.dataRetutn = 'dataRetutn';
-        listParams.reasonRetutn = 'reasonRetutn';
+        for(const field of [
+          'type1',
+          'type2',
+          'type3',              
+          'created',
+          'updated',
+          'numberOrder',
+          'status',
+          'summ',
+          'shop1',
+          'shop2',
+          'dataRetutn',
+          'reasonReturn',
+        ]) {
+          listParams[field] = field;
+        }
 
         await page.goto(assortimentLink);
 
@@ -291,25 +292,30 @@ const durationPause = 1000;
             console.log(`page ${i} elsCount ${elsCount}`);
             for(let j = 1; j <= elsCount; j++) {
               try {
-                let name = '';
-                if (await checkExistance(page, selectorNameByN(j))) {
-                  name = await page.$eval(selectorNameByN(j), el => el.innerText);      
-                }
-                let sku = '';
-                if (await checkExistance(page, selectorSKUByN(j))) {
-                  sku = await page.$eval(selectorSKUByN(j), el => el.innerText);  
-                }
-                
-                let priceValue = ''
-                if (await checkExistance(page, selectorPrice(j))) {
-                  priceValue = await page.$eval(selectorPrice(j), el => el.value);
-                }
-                priceValue = priceValue ?
-                priceValue.replace(/\s/g, '') 
-                : priceValue; 
 
-                listParams.name.push(name || '');                
-                listParams.sku.push(sku || '');
+                const rowValues = {};
+                for(const field of [
+                  'type1',
+                  'type2',
+                  'type3',              
+                  'created',
+                  'updated',
+                  'numberOrder',
+                  'status',
+                  'summ',
+                  'shop1',
+                  'shop2',
+                ]) {
+                  rowValues[field] = '';
+                  try{ 
+                    if (await checkExistance(page, parseReturnsSelectors[`${field}Selector`](j))) {
+                      rowValues[field] = await page.$eval(parseReturnsSelectors[`${field}Selector`](j), el => el.innerText);      
+                    }
+                  } catch (e) {
+                    //
+                  }
+                  listParams[field].push(rowValues[field]);       
+                }
               } catch (e) {
                 console.log(e);
                 console.log('error in row');

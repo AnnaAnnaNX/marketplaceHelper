@@ -205,6 +205,30 @@ const durationPause = 1000;
     }
   }
 
+
+  // selectors table
+    const type1Selector = `[data-e2e="tableRow"]:nth-child(${N}) td:nth-child(1) button`; // click for popup
+    const type2Selector = `[data-e2e="tableRow"]:nth-child(${N}) td:nth-child(1)  .style-offerName___ovtNd`;
+    const type3Selector = `[data-e2e="tableRow"]:nth-child(${N}) td:nth-child(1)  span>[data-e2e-i18n-key]`;
+
+    const createdSelector = `[data-e2e="tableRow"]:nth-child(${N}) td:nth-child(2) [data-e2e="return-created-date"]`;
+    const updatedSelector = `[data-e2e="tableRow"]:nth-child(${N}) td:nth-child(2) div+ div>.___Tag___XnCAY`;
+
+    const numberOrderSelector = `[data-e2e="tableRow"]:nth-child(${N}) td:nth-child(3)`;
+
+    const statusSelector = `[data-e2e="tableRow"]:nth-child(${N}) td:nth-child(5)`;
+
+    const summSelector = `[data-e2e="tableRow"]:nth-child(${N}) td:nth-child(5)`;
+      // ₽
+
+    const shop1Selector = `[data-e2e="tableRow"]:nth-child(${N}) td:nth-child(7) [class^=___unit]:first-child`;
+    const shop2Selector = `[data-e2e="tableRow"]:nth-child(${N}) td:nth-child(7) [class^=___unit]:last-child`;
+
+  // selectors popup
+    const dataRetutnSelector = `[role="radiogroup"] + div .___root_k72io_1 .___root_k72io_1`;
+	  const reasonRetutnSelector = `[data-e2e="return-drawer-content"] tbody tr>td:nth-child(2)>[data-tid-prop]`;
+    const closePopupSelector = `[aria-label="Закрыть"]`;
+
   const parseReturns = async (inputParams) => {
     try {
 
@@ -219,8 +243,23 @@ const durationPause = 1000;
         page = result.page;
 
         const listParams = {}
-        listParams.sku = ['sku'];
-        listParams.name = ['name'];
+        listParams.type1 = 'type1';
+        listParams.type2 = 'type2';
+        listParams.type3 = 'type3';
+    
+        listParams.created = 'created';
+        listParams.updated = 'updated';
+
+        listParams.numberOrder = 'numberOrder';
+    
+        listParams.status = 'status';
+        listParams.summ = 'summ';
+        
+        listParams.shop1 = 'shop1';
+        listParams.shop2 = 'shop2';
+
+        listParams.dataRetutn = 'dataRetutn';
+        listParams.reasonRetutn = 'reasonRetutn';
 
         await page.goto(assortimentLink);
 

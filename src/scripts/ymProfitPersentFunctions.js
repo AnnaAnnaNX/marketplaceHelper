@@ -20,6 +20,7 @@ const selectorDeliveryFrom = '[data-spacer="true"] +[class^="___unit"] [class^="
 const selectorComission = (N) => (`[data-e2e-row-offer-id]:nth-child(${N}) td>div>.__use--inline_1dsct_1>.___unit_1dsct_1:nth-child(2) .__use--inline_1dsct_1`);
 const selectorPrice = (N) => (`[data-e2e-row-offer-id]:nth-child(${N}) [data-e2e="basic-price-cell"] input`)
 const selectorNextButton = '[title=""]:last-child'
+const selectorLoadMoreButton = '[data-e2e="returns-pager"]';
 const { v4: uuidv4 } = require('uuid');
 const fs = require('fs');
 
@@ -204,7 +205,99 @@ const durationPause = 1000;
     }
   }
 
+  const parseReturns = async (inputParams) => {
+    try {
+
+        console.log('parseReturns');
+        const browser = await puppeteer.launch({headless: false});
+        let page = await browser.newPage();
+        await page.emulate(iPhone);
+
+        const { assortimentLink, login, password } = inputParams;
+        const result = await auth(page, login, password);
+        // if (!result.success) return { success: false };
+        page = result.page;
+
+        const listParams = {}
+        listParams.sku = ['sku'];
+        listParams.name = ['name'];
+
+        await page.goto(assortimentLink);
+
+        await sleep(durationPause*5);
+
+        // const morebutton = await page.evaluateHandle(() => {
+        //   const result = document.querySelector('[data-e2e="returns-pager"]');
+        //   return result;
+        // });
+        await page.$eval(selectorLoadMoreButton, btn => btn.scrollIntoView());
+        await page.click(selectorLoadMoreButton)
+        // scroll buttom
+        let i = 0;
+        while ((i < 10) && (await checkExistance(page, selectorLoadMoreButton))) {
+          i++;
+          await page.$eval(selectorLoadMoreButton, btn => btn.scrollIntoView());
+          await page.click(selectorLoadMoreButton)
+          await sleep(durationPause);
+        }
+
+        let elsCount = 0;
+        await page.goto(assortimentLink);
+        try {
+          // await page.goto(`${assortimentLink}&page=${i}`);
+          if (!await checkExistance(page, selectorRow)) throw new Error(`not found selectorRow ${selectorRow}`);
+          elsCount = await page.$$eval(selectorRow, els => els.length);
+
+          if (elsCount) {
+            console.log(`page ${i} elsCount ${elsCount}`);
+            for(let j = 1; j <= elsCount; j++) {
+              try {
+                let name = '';
+                if (await checkExistance(page, selectorNameByN(j))) {
+                  name = await page.$eval(selectorNameByN(j), el => el.innerText);      
+                }
+                let sku = '';
+                if (await checkExistance(page, selectorSKUByN(j))) {
+                  sku = await page.$eval(selectorSKUByN(j), el => el.innerText);  
+                }
+                
+                let priceValue = ''
+                if (await checkExistance(page, selectorPrice(j))) {
+                  priceValue = await page.$eval(selectorPrice(j), el => el.value);
+                }
+                priceValue = priceValue ?
+                priceValue.replace(/\s/g, '') 
+                : priceValue; 
+
+                listParams.name.push(name || '');                
+                listParams.sku.push(sku || '');
+              } catch (e) {
+                console.log(e);
+                console.log('error in row');
+              }
+            }
+          }
+        } catch (e) {
+          console.log(e);
+          console.log('error in page');
+        }
+    
+        await browser.close();
+
+        console.log('listParams');
+        console.log(listParams);
+
+        return listParams;
+
+
+    } catch(e) {
+        console.log('getPersentProducts');
+        console.log(e);
+    }
+  }
+
 module.exports = {
     parsePersentProducts,
-    writeResultColumnsYMProfit
+    writeResultColumnsYMProfit,
+    parseReturns
 }

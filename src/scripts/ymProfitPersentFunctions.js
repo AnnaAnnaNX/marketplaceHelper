@@ -225,9 +225,10 @@ const durationPause = 1000;
       shop2Selector: (N) => (`[data-e2e="tableRow"]:nth-child(${N}) td:nth-child(7) [class^=___unit]:last-child`),
 
     // selectors popup
-      dataRetutnSelector: `[role="radiogroup"] + div .___root_k72io_1 .___root_k72io_1`,
-      reasonRetutnSelector: `[data-e2e="return-drawer-content"] tbody tr>td:nth-child(2)>[data-tid-prop]`,
+      dataReturnSelector: `[role="radiogroup"] + div .___root_k72io_1 .___root_k72io_1`,
+      reasonReturnSelector: `[data-e2e="return-drawer-content"] tbody tr>td:nth-child(2)>[data-tid-prop]`,
       closePopupSelector: `[aria-label="Закрыть"]`,
+      titlePopupSelector: '[data-e2e-i18n-key^="pages.business-returns:return.type."]'
     }
 
   const parseReturns = async (inputParams) => {
@@ -255,7 +256,7 @@ const durationPause = 1000;
           'summ',
           'shop1',
           'shop2',
-          'dataRetutn',
+          'dataReturn',
           'reasonReturn',
         ]) {
           listParams[field] = [field];
@@ -268,10 +269,6 @@ const durationPause = 1000;
 
         await sleep(durationPause*5);
 
-        // const morebutton = await page.evaluateHandle(() => {
-        //   const result = document.querySelector('[data-e2e="returns-pager"]');
-        //   return result;
-        // });
         await page.$eval(selectorLoadMoreButton, btn => btn.scrollIntoView());
         await page.click(selectorLoadMoreButton)
         // scroll buttom
@@ -310,13 +307,50 @@ const durationPause = 1000;
                   rowValues[field] = '';
                   try{ 
                     if (await checkExistance(page, parseReturnsSelectors[`${field}Selector`](j))) {
-                      rowValues[field] = await page.$eval(parseReturnsSelectors[`${field}Selector`](j), el => el.innerText);      
+                      rowValues[field] = await page.$eval(parseReturnsSelectors[`${field}Selector`](j), el => el.innerText);
+                      if (field === 'summ') {
+                        rowValues[field] = rowValues[field]
+                          ? rowValues[field].replace(/[\s₽]/g, '')
+                          : rowValues[field]; 
+                      }   
                     }
                   } catch (e) {
                     //
                   }
                   listParams[field].push(rowValues[field]);       
                 }
+
+                let dataReturn = '';
+                let reasonReturn = '';
+                // const { page,  dataReturn, reasonReturn] = await getDetailedInfoReturns(page);
+                if (await checkExistance(page, parseReturnsSelectors['type1Selector'](j))) {
+                  await page.$eval(parseReturnsSelectors['type1Selector'](j), btn => btn.scrollIntoView());
+                  await page.click(parseReturnsSelectors['type1Selector'](j));
+                  if (await checkExistance(page, parseReturnsSelectors['dataReturnSelector'])) {
+                    // window show
+                    dataReturn = await page.$eval(parseReturnsSelectors['dataReturnSelector'], el => el.innerText);
+                    
+                    //read title
+                    if (await checkExistance(page, parseReturnsSelectors['titlePopupSelector'])) {
+                        const title = await page.$eval(parseReturnsSelectors['titlePopupSelector'], el => el.innerText);
+                        if (title.startsWith('Возврат')) {
+                          if (await checkExistance(page, parseReturnsSelectors['reasonReturnSelector'])) {
+                            reasonReturn = await page.$eval(parseReturnsSelectors['reasonReturnSelector'], el => el.innerText);
+                          }
+                        }
+                    }                    
+                  }
+                  await page.click(parseReturnsSelectors['closePopupSelector']);
+                  await sleep(500);
+                  // if (await checkExistance(page, parseReturnsSelectors['dataReturnSelector'])) {
+                  //   throw new Error('not close popup');
+                  // }
+                }
+
+                listParams.dataReturn.push(dataReturn || '');
+                listParams.reasonReturn.push(reasonReturn || '');
+
+
               } catch (e) {
                 console.log(e);
                 console.log('error in row');

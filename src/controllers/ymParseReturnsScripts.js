@@ -61,7 +61,7 @@ router.route('/').post( upload.array("multFiles", 1), async (req, res, next) => 
           'summ',
           'shop1',
           'shop2',
-          'dataRetutn',
+          'dataReturn',
           'reasonReturn',
           ]);
         console.log('pathToResultFile');

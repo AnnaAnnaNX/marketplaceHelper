@@ -3,6 +3,8 @@ const ExcelJS = require('exceljs');
 const puppeteer = require('puppeteer');
 const { typeFilesWithFields } = require('./consts.json');
 const { shops } = require('./consts.json');
+const fs = require('fs');
+const { v4: uuidv4 } = require('uuid');
 
 const writeNamesAndPrices = async (content) => {
     try {
@@ -83,6 +85,10 @@ const writeProductLink = async (content) => {
 
 const writeRowsInExcel = async (headers, rows) => {
     try {
+        // try {
+        //     fs.unlinkSync(path.join(__dirname, '../result.xlsx'));
+        // } catch(e) {}
+
         // const headers = req && req.body && req.body.headers;
         // const rows = req && req.body && req.body.rows;
         console.log('headers');
@@ -93,7 +99,8 @@ const writeRowsInExcel = async (headers, rows) => {
 
         const workbook = new ExcelJS.Workbook();
         const worksheet = workbook.addWorksheet('Ассортимент');
-        const filePath = path.join(__dirname, '../result.xlsx');
+        // const filePath = path.join(__dirname, '../result.xlsx');
+        const filePath = path.join(__dirname, '../', 'results', `${uuidv4()}.xlsx`);
 
         const headersArr = headers.map(el => (el.value ? el.value : el));
         const rowsArr = rows.map(row => {
@@ -119,13 +126,16 @@ const writeRowsInExcel = async (headers, rows) => {
             });
         })
 
-    
+
+        for (let i = 0; i < headersArr.length; i++) {
+            if (worksheet.getColumn(i)) worksheet.getColumn(i).width = 30;
+        }
 
         await workbook.xlsx.writeFile(filePath);
 
 
         // await setPricies(files[0]);
-    
+
 
         // res.download(filePath);
         return filePath;
@@ -219,7 +229,7 @@ const getInfoFromFile = async (file) => {
 async function readYMOutput(file) {
     console.log('readYMOutput');
     // get product info while type file
-    const content = await getInfoFromFile('ym', file);        
+    const content = await getInfoFromFile('ym', file);
     return content;
 
 }
@@ -345,7 +355,7 @@ const calcMarkupYMAndWriteFile = async (content) => {
                 dostPotr.fby = 250;
             }
             dostPotr.expr = normalize(price * 0.04, 55, 200);
-            
+
             const arr = {};
             ['fbs', 'dbs', 'fby', 'expr'].forEach((model) => {
                 console.log(model);
@@ -359,7 +369,7 @@ const calcMarkupYMAndWriteFile = async (content) => {
                 // val += magMax[model] || 0; text.push(`Магистраль Max(${formatNum(magMax[model])})`);
                 text.push(`Магистраль Max(${formatNum(magMax[model])})`);
                 val += dostPotr[model] || 0; text.push(`доставке потребителям(${formatNum(dostPotr[model])})`);
-        
+
                 console.log(text.join(', '));
                 arr[model] = {
                     'min': val,
@@ -368,7 +378,7 @@ const calcMarkupYMAndWriteFile = async (content) => {
                 };
             });
 
-            
+
             return {
                 ...row,
                 gabar,
@@ -391,13 +401,12 @@ const calcMarkupYMAndWriteFile = async (content) => {
         return new Error(e);
     }
 }
-  
+
 const checkExistance = async (page, selector) => {
     try {
         await page.waitForSelector(selector);
     } catch(e) {}
-    const elsCount = await page.$$eval(selector, els => els.length);
-  
+    const elsCount = await page.$$eval(selector, els => els.length);  
     // console.log('elsCount length');
     // console.log(elsCount);
     if (!elsCount) {
@@ -411,15 +420,15 @@ const getProductLinksByGroup = async (group, page) => {
     try {
         // const browser = await puppeteer.launch({ headless: false });
         // const page = await browser.newPage();
-        // await page.setDefaultNavigationTimeout(0); 
-        
+        // await page.setDefaultNavigationTimeout(0);
+
         // get count page
         await page.goto(`${group}?page=1`);
         let countPage = 1;
         if (!(await checkExistance(page, '.results'))) {
-            console.log('not found .results');        
+            console.log('not found .results');
         } else {
-            name = await page.$eval('.results', el => el.innerText);      
+            name = await page.$eval('.results', el => el.innerText);
             const arr = / (\d)*\).$/g.exec(name);
             countPage = arr && arr[1] && arr[1].toString() || 1;
         }
@@ -431,9 +440,9 @@ const getProductLinksByGroup = async (group, page) => {
             const newLinks = await page.$$eval(".good-title a", (list) => list.map((elm) => elm.href));
             links = [...links, ...newLinks]
         }
-    
+
         // await browser.close();
-    
+
         return links;
     } catch (e) {
         return { error: e }

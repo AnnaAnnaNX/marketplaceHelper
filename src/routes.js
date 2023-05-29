@@ -13,6 +13,9 @@ const ymProfitGetPersentScripts = require('./controllers/ymProfitGetPersentScrip
 const ymRenewAmountScripts = require('./controllers/ymRenewAmountScripts')
 const ymRenewPriceScripts = require('./controllers/ymRenewPriceScripts')
 const findPriceForMarketplaceScripts = require('./controllers/findPriceForMarketplace')
+const analyticPricesScripts = require('./controllers/analyticPrices')
+const poiskhomeGetLinksScripts = require('./controllers/poiskhome')
+const setLeftoversScripts = require('./controllers/setLeftovers')
 const incomeScripts = require('./controllers/income')
 
 router.use('/scripts', scripts)
@@ -24,8 +27,10 @@ router.use('/ymProfitGetPersent', ymProfitGetPersentScripts)
 router.use('/ymRenewAmount', ymRenewAmountScripts)
 router.use('/ymRenewPrice', ymRenewPriceScripts)
 router.use('/findPriceForMarketplace', findPriceForMarketplaceScripts)
+router.use('/analytic-prices', analyticPricesScripts)
+router.use('/poiskhome', poiskhomeGetLinksScripts)
+router.use('/set-leftovers', setLeftoversScripts)
 router.use('/income', incomeScripts)
-
 
 function store(req, res) {
     const tools = {}

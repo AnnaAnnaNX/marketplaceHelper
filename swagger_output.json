@@ -371,6 +371,136 @@
           }
         }
       }
+    },
+    "/analytic-prices/": {
+      "post": {
+        "description": "Аналитика цен. Вх файлы: остатки http://localhost:3000/1_ostatki.xlsx, ссылки http://localhost:3000/2_links.xlsx. Имена файлов должны быть без пробелов! ",
+        "consumes": [
+          "multipart/form-data"
+        ],
+        "parameters": [
+          {
+            "name": "multFiles",
+            "in": "formData",
+            "type": "array",
+            "required": true,
+            "description": "Загрузить файл с данными",
+            "collectionFormat": "multi",
+            "items": {
+              "type": "file"
+            }
+          }
+        ],
+        "responses": {
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/poiskhome/getLinks": {
+      "post": {
+        "description": "Аналитика цен. Вх файлы: остатки http://localhost:3000/1_ostatki.xlsx, ссылки http://localhost:3000/2_links.xlsx. Имена файлов должны быть без пробелов! ",
+        "consumes": [
+          "multipart/form-data"
+        ],
+        "parameters": [
+          {
+            "name": "multFiles",
+            "in": "formData",
+            "type": "array",
+            "required": true,
+            "description": "Загрузить файл с данными - текстовый файл - каждая ссылка на группу на новой строке",
+            "collectionFormat": "multi",
+            "items": {
+              "type": "file"
+            }
+          }
+        ],
+        "responses": {
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/poiskhome/getCharacteristics": {
+      "post": {
+        "description": "Аналитика цен. Вх файлы: остатки http://localhost:3000/1_ostatki.xlsx, ссылки http://localhost:3000/2_links.xlsx. Имена файлов должны быть без пробелов! ",
+        "consumes": [
+          "multipart/form-data"
+        ],
+        "parameters": [
+          {
+            "name": "multFiles",
+            "in": "formData",
+            "type": "array",
+            "required": true,
+            "description": "Загрузить файл с данными - ссылки на товар - простой текстовый файл - каждый ссылка на новой строке",
+            "collectionFormat": "multi",
+            "items": {
+              "type": "file"
+            }
+          }
+        ],
+        "responses": {
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/set-leftovers/": {
+      "post": {
+        "description": "Начисление остатков по складам для YM.",
+        "consumes": [
+          "multipart/form-data"
+        ],
+        "parameters": [
+          {
+            "name": "multFiles",
+            "in": "formData",
+            "type": "array",
+            "required": true,
+            "description": "Входные файлы: Прайс ПОИСК.xlsx, Ассортимент Яндекс.xlsx",
+            "collectionFormat": "multi",
+            "items": {
+              "type": "file"
+            }
+          }
+        ],
+        "responses": {
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/income/": {
+      "post": {
+        "description": "Начисление остатков по складам для YM.",
+        "consumes": [
+          "multipart/form-data"
+        ],
+        "parameters": [
+          {
+            "name": "multFiles",
+            "in": "formData",
+            "type": "array",
+            "required": true,
+            "description": "Входные файлы: Прайс ПОИСК.xlsx, Ассортимент Яндекс.xlsx",
+            "collectionFormat": "multi",
+            "items": {
+              "type": "file"
+            }
+          }
+        ],
+        "responses": {
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
     }
   },
   "definitions": {

@@ -53,7 +53,7 @@ router.route('/').post( upload.array("multFiles", 1), async (req, res, next) => 
     try {
         const inputParams = {};
         inputParams.login = (req.body && req.body.login) || 'AnnaAnnaNX@yandex.ru';
-        inputParams.password = (req.body && req.body.password) || 'Visuzu54';
+        inputParams.password = (req.body && req.body.password) || 'fsdg646KUJGKI___';
         inputParams.assortimentLink = (req.body && req.body.assortimentLink) || 'https://partner.market.yandex.ru/supplier/26020183/assortment';
         inputParams.startPage = (req.body && req.body.startPage) || 1;
         inputParams.numberOfPage = (req.body && req.body.numberOfPage) || 1000;
@@ -61,9 +61,10 @@ router.route('/').post( upload.array("multFiles", 1), async (req, res, next) => 
         const persentProducts = await parsePersentProducts(inputParams);
 
         // добавить названия столбцов для links, names, prices
-        await writeResultColumnsYMProfit(persentProducts);
-        res.download('./result.xlsx', 'result.xlsx');
-        // res.download(path.join(__dirname, '../../', req.files[0].path), 'resul.xlsx');
+        const pathToResultFile = await writeResultColumnsYMProfit(persentProducts);
+        console.log('pathToResultFile');
+        console.log(pathToResultFile);
+        res.download(pathToResultFile, 'result.xlsx');
     } catch (e) {
         console.log('error on YM-маржа');
         console.log(e);

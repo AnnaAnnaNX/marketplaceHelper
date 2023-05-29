@@ -16,7 +16,7 @@ const fileInfoForReadFile = {
             amount: 5,
         },
         rowBeginProduct: 3,
-    },    
+    },
     'парсинг ЯМ': {
         tagName: 'Ассортимент',
         rowHeader: 1,
@@ -28,7 +28,7 @@ const fileInfoForReadFile = {
                 return val || val.result;
             }
         }
-    },      
+    },
     'закупка Ozon': {
         tagName: 'закупка',
         rowHeader: 1,
@@ -36,7 +36,7 @@ const fileInfoForReadFile = {
         columnsNames: ['Код', 'Номенклатура', 'ШК', 'ЗЦ, руб.', 'РЦ, руб.', 'Комиссия за рекламу'],
         skuColumnName: 'Код',
         formatters: {}
-    },     
+    },
     'шаблон цен Ozon': {
         tagName: 'Товары и цены',
         rowHeader: 3,
@@ -91,13 +91,53 @@ const fileInfoForReadFile = {
         columnsNames: ['Артикул', 'Цена продажи'],
         skuColumnName: 'Артикул',
         formatters: {}
-    }, 
+    },
     'процент эффективности': {
-        tagName: 'Лист1',
+        tagName: 'Эффективность',
         rowHeader: 1,
         rowBeginProduct: 2,
         columnsNames: ['Артикул', 'Эффективность'],
         skuColumnName: 'Артикул',
+        formatters: {}
+    },
+    'analyticPrices остатки': {
+        tagName: 'Sheet',
+        rowHeader: 1,
+        rowBeginProduct: 2,
+        columnsNames: ['Наименование товара', 'Код товара', 'Ед', 'Ост-к', 'Цена вх','Ц розн'],
+        skuColumnName: 'Код товара',
+        formatters: {}
+    },
+    'analyticPrices ссылки': {
+        tagName: 'Лист1',
+        rowHeader: 4,
+        rowBeginProduct: 5,
+        columnsNames: [
+            'Название товара',
+            'Артикул производителя',
+            'Код товара',
+            'ИМ poiskhome.ru',
+            'ОЗОН poskhome.ru',
+            'ИМ Мвидео',
+            'ОЗОН Мвидео'
+        ],
+        skuColumnName: 'Код товара',
+        formatters: {}
+    },
+    'Прайс ПОИСК.xlsx': {
+        tagName: 'Sheet',
+        rowHeader: 1,
+        rowBeginProduct: 2,
+        columnsNames: ['Код товара', '№ ПС', 'Ост-к'],
+        skuColumnName: 'Код товара',
+        formatters: {}
+    },
+    'Ассортимент Яндекс.xlsx': {
+        tagName: 'Список товаров',
+        rowHeader: 2,
+        rowBeginProduct: 4,
+        columnsNames: ['Ваш SKU *'],
+        skuColumnName: 'Ваш SKU *',
         formatters: {}
     },
 };

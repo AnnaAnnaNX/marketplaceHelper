@@ -7,12 +7,13 @@ const {
     setMinMax
  } = require('../utils');
 const _ = require("lodash");
-const { 
+const {
     ymEffByPrice,
     ymPriceByEff,
     ozonEffByPrice,
     ozonPriceByEff
 } = require('../calculateMarketplaceCommission/index');
+const path = require('path');
 
 const universalReadExcelFileNew = async (file, filenameForConstantsFile) => {
     try {
@@ -21,7 +22,7 @@ const universalReadExcelFileNew = async (file, filenameForConstantsFile) => {
         let worksheet = null;
         const workbook = new ExcelJS.Workbook();
         await workbook.xlsx.readFile(file.path);
-        
+
         const info = fileInfoForReadFile[filenameForConstantsFile];
 
         // worksheet = await workbook.getWorksheet(info.tagName);
@@ -36,9 +37,10 @@ const universalReadExcelFileNew = async (file, filenameForConstantsFile) => {
         // console.log(nSkuColumn, nColumns);
         // результат в двух вариантах - [col1, col2], {sku1: {все поля}}
         const columns = {};
-        columns[info.skuColumnName] = info.formatters['sku']
-            ? worksheet.getColumn(nSkuColumn).values.slice(info.rowBeginProduct).map(info.formatters['sku'])
-            : worksheet.getColumn(nSkuColumn).values.slice(info.rowBeginProduct);
+        const arr = worksheet.getColumn(nSkuColumn).values;
+        columns[info.skuColumnName] = info.formatters && info.formatters['sku']
+            ? worksheet.getColumn(nSkuColumn).values.slice(info.rowBeginProduct).map(el => (el.text ? el.text : el)).map(info.formatters['sku'])
+            : worksheet.getColumn(nSkuColumn).values.slice(info.rowBeginProduct).map(el => (el.text ? el.text : el));
         info.columnsNames.forEach((header, i) => {
             // console.log('header');
             // console.log(header);
@@ -46,11 +48,15 @@ const universalReadExcelFileNew = async (file, filenameForConstantsFile) => {
             // console.log(i);
             // console.log('nColumns[i]');
             // console.log(nColumns[i]);
-            if (nColumns[i] && (nColumns[i] != -1)) {
-            columns[header] = info.formatters[header]
-                ? worksheet.getColumn(nColumns[i]).values.slice(info.rowBeginProduct).map(info.formatters[header])
-                : worksheet.getColumn(nColumns[i]).values.slice(info.rowBeginProduct);
-            }
+            // if (nColumns[i] && (nColumns[i] != -1)) {
+            // columns[header] = info.formatters[header]
+            //     ? worksheet.getColumn(nColumns[i]).values.slice(info.rowBeginProduct).map(info.formatters[header])
+            //     : worksheet.getColumn(nColumns[i]).values.slice(info.rowBeginProduct);
+            // }
+            const arr = worksheet.getColumn(nColumns[i]).values;
+            columns[header] = info.formatters &&  info.formatters[header]
+                ? worksheet.getColumn(nColumns[i]).values.slice(info.rowBeginProduct).map(el => (el.text ? el.text : el)).map(info.formatters[header])
+                : worksheet.getColumn(nColumns[i]).values.slice(info.rowBeginProduct).map(el => (el.text ? el.text : el));
         })
         return createObjectFromColumns(columns, info.skuColumnName);
     } catch (e) {
@@ -99,10 +105,10 @@ const ymCalculateEff = (assort) => {
                     parseFloat(obj['Процент рекламы']),
                     obj['МГ/КГ']
                 );
-                obj['Эффективность'] = eff;                
+                obj['Эффективность'] = eff;
                 obj['Комиссия маркетплейса'] = commission;
             } catch (e) {
-                obj['Эффективность'] = '-';            
+                obj['Эффективность'] = '-';
                 obj['Комиссия маркетплейса'] = '-';
             }
 
@@ -118,7 +124,7 @@ const ymCalculateEff = (assort) => {
             //     obj['Доставка покупателю'] = setMinMax(val, 60, 350);
             // }
             // obj['Обработка заказа в сортировочном центре или пункте приема'] = 45;
-            
+
             // obj['Комиссия маркетплейса'] = parseFloat(obj['Размещение товаров на витрине'])
             //     + parseFloat(obj['Приём и перевод платежа покупателя'])
             //     + parseFloat(obj['Доставка покупателю'])
@@ -188,11 +194,11 @@ const ozonCalculateEff = (assort) => {
                     parseFloat(obj['Комиссия за рекламу']),
                     parseFloat(obj['Объемный вес, кг']),
                     obj['МГ/КГ']
-                );                
-                obj['Эффективность'] = eff;                
+                );
+                obj['Эффективность'] = eff;
                 obj['Комиссия маркетплейса'] = commission;
             } catch (e) {
-                obj['Эффективность'] = '-';            
+                obj['Эффективность'] = '-';
                 obj['Комиссия маркетплейса'] = '-';
             }
             assort[sku] = obj;
@@ -234,10 +240,46 @@ const ozonCalculatePrice = (assort) => {
     }
 }
 
+const reorderFiles = async (filesOrder, realFiles) => {
+  try {
+    // const filesOrder = ['парсинг ЯМ', 'процент эффективности']
+    const tabsForFilesOrder = filesOrder
+      .map(fileName => (fileInfoForReadFile[fileName].tagName))
+
+    // get realFileTabNames
+    // read files in circle
+    const workbook = new ExcelJS.Workbook();
+    let realFileTabs = []
+    for(const file of realFiles){
+      const excelFile = await workbook.xlsx.readFile(file.path)
+      const tabs = workbook._worksheets.map(tab => (tab.name)).filter(el => el)
+      realFileTabs.push(tabs)
+    }
+
+    const files = []
+    for(const requiredTab of tabsForFilesOrder){
+      for(const [i, tabs] of Object.entries(realFileTabs)) {
+        if (tabs.includes(requiredTab)) {
+          files.push(realFiles[i])
+          realFileTabs = [...realFileTabs.slice(0, i), ...realFileTabs.slice(i, realFileTabs.length)]
+          realFiles = [...realFiles.slice(0, i), ...realFiles.slice(i, realFileTabs.length)]
+          break
+        }
+      }
+    }
+    return files
+  } catch(e) {
+    console.log(e)
+    throw new Error()
+  }
+}
+
 module.exports = {
     createUnionAssort,
     ymCalculateEff,
     ymCalculatePrice,
     ozonCalculateEff,
-    ozonCalculatePrice
+    ozonCalculatePrice,
+    universalReadExcelFileNew,
+    reorderFiles
 }

@@ -20,13 +20,15 @@ const selectorDeliveryFrom = '[data-spacer="true"] +[class^="___unit"] [class^="
 const selectorComission = (N) => (`[data-e2e-row-offer-id]:nth-child(${N}) td>div>.__use--inline_1dsct_1>.___unit_1dsct_1:nth-child(2) .__use--inline_1dsct_1`);
 const selectorPrice = (N) => (`[data-e2e-row-offer-id]:nth-child(${N}) [data-e2e="basic-price-cell"] input`)
 const selectorNextButton = '[title=""]:last-child'
+const { v4: uuidv4 } = require('uuid');
+const fs = require('fs');
 
 const durationPause = 1000;
 
   const auth = async (page, login, password) => {
     try {
         const authLink = 'https://passport.yandex.ru/auth/welcome?retpath=https://market.yandex.ru/partners';
-    
+
         await page.goto(authLink);
 
         if (!await checkExistance(page, selectorLogin)) return {success: false};
@@ -36,9 +38,8 @@ const durationPause = 1000;
         await page.type(selectorLogin, password, {delay: 20});
         await page.keyboard.press('Enter');
         // if (!await checkExistance(page, selectorCheckAuth)) return {success: false, page: page};
-
         await sleep(durationPause*5);
-        return {success: true};
+        return {success: true, page: page};
     } catch (e) {
         console.log('auth');
         console.log(e);
@@ -58,12 +59,12 @@ const durationPause = 1000;
         const { assortimentLink, login, password, startPage, numberOfPage } = inputParams;
         const numberOfPageEdit = parseInt(numberOfPage) || 1000;
         const result = await auth(page, login, password);
-        if (!result.success) return { success: false };
-        // page = result.page;
-  
+        // if (!result.success) return { success: false };
+        page = result.page;
+
         const listParams = {
         }
-  
+
         listParams.sku = ['sku'];
         listParams.name = ['name'];
         // listParams.persent= ['persent'];
@@ -81,8 +82,8 @@ const durationPause = 1000;
               // await page.goto(`${assortimentLink}&page=${i}`);
               await sleep(durationPause*5);
               if (!await checkExistance(page, selectorRow)) break;
-              
               elsCount = await page.$$eval(selectorRow, els => els.length);
+
               if (elsCount) {
                 console.log(`page ${i} elsCount ${elsCount}`);
                 for(let j = 1; j <= elsCount; j++) {
@@ -148,7 +149,7 @@ const durationPause = 1000;
                     console.log('error in row');
                   }
                 }
-              }      
+              }
             } catch (e) {
               console.log(e);
               console.log('error in page');
@@ -158,7 +159,7 @@ const durationPause = 1000;
         } while(elsCount && (i<n));
     
         await browser.close();
-    
+
         console.log('listParams');
         console.log(listParams);
 
@@ -176,30 +177,33 @@ const durationPause = 1000;
     try {
         const workbook = new ExcelJS.Workbook();
         const worksheet = workbook.addWorksheet('Ассортимент');
-        const filePath = path.join(__dirname, '../result.xlsx');
-  
+        // const filePath = path.join(__dirname, '../result.xlsx');
+        const filePath = path.join(__dirname, '../../', 'results', `${uuidv4()}.xlsx`);
+        console.log('filePath');
+        console.log(filePath);
+
         const namesColumns = [
           ,
-          'name',                
+          'name',
           'sku',
           'comission',
           'priceValue'
         ];
-  
+
         for (let i = 1; i < namesColumns.length; i++) {
           const columnName = namesColumns[i];
           worksheet.getColumn(i).values = content[columnName];
           worksheet.getColumn(i).width = 30;
         }
-  
-        await workbook.xlsx.writeFile('./result.xlsx');
-  
+
+        await workbook.xlsx.writeFile(filePath);
+        return filePath;
     } catch(e) {
         console.log('writeNamesAndPrices');
         console.log(e);
     }
   }
-  
+
 module.exports = {
     parsePersentProducts,
     writeResultColumnsYMProfit

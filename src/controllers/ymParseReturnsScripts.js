@@ -49,7 +49,21 @@ router.route('/').post( upload.array("multFiles", 1), async (req, res, next) => 
         const persentProducts = await parseReturns(inputParams);
 
         // добавить названия столбцов для links, names, prices
-        const pathToResultFile = await writeResultColumnsYMProfit(persentProducts);
+        const pathToResultFile = await writeResultColumnsYMProfit(persentProducts, [
+          ,
+          'type1',
+          'type2',
+          'type3',              
+          'created',
+          'updated',
+          'numberOrder',
+          'status',
+          'summ',
+          'shop1',
+          'shop2',
+          'dataRetutn',
+          'reasonReturn',
+          ]);
         console.log('pathToResultFile');
         console.log(pathToResultFile);
         res.download(pathToResultFile, 'result.xlsx');

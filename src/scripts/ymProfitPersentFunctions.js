@@ -174,7 +174,13 @@ const durationPause = 1000;
   }
 
   const 
-  writeResultColumnsYMProfit = async (content) => {
+  writeResultColumnsYMProfit = async (content, namesColumns =  [
+    ,
+    'name',
+    'sku',
+    'comission',
+    'priceValue'
+  ]) => {
     try {
         const workbook = new ExcelJS.Workbook();
         const worksheet = workbook.addWorksheet('Ассортимент');
@@ -182,14 +188,6 @@ const durationPause = 1000;
         const filePath = path.join(__dirname, '../../', 'results', `${uuidv4()}.xlsx`);
         console.log('filePath');
         console.log(filePath);
-
-        const namesColumns = [
-          ,
-          'name',
-          'sku',
-          'comission',
-          'priceValue'
-        ];
 
         for (let i = 1; i < namesColumns.length; i++) {
           const columnName = namesColumns[i];
@@ -207,6 +205,7 @@ const durationPause = 1000;
 
 
   // selectors table
+    const selectorRowForParseReturns = `[data-e2e="tableRow"]`;
     const parseReturnsSelectors = {
       type1Selector: (N) => (`[data-e2e="tableRow"]:nth-child(${N}) td:nth-child(1) button`), // click for popup
       type2Selector: (N) => (`[data-e2e="tableRow"]:nth-child(${N}) td:nth-child(1)  .style-offerName___ovtNd`),
@@ -259,8 +258,11 @@ const durationPause = 1000;
           'dataRetutn',
           'reasonReturn',
         ]) {
-          listParams[field] = field;
+          listParams[field] = [field];
         }
+
+
+        await page.emulate(iPhone);
 
         await page.goto(assortimentLink);
 
@@ -282,11 +284,10 @@ const durationPause = 1000;
         }
 
         let elsCount = 0;
-        await page.goto(assortimentLink);
         try {
           // await page.goto(`${assortimentLink}&page=${i}`);
-          if (!await checkExistance(page, selectorRow)) throw new Error(`not found selectorRow ${selectorRow}`);
-          elsCount = await page.$$eval(selectorRow, els => els.length);
+          if (!await checkExistance(page, selectorRowForParseReturns)) throw new Error(`not found selectorRowForParseReturns ${selectorRowForParseReturns}`);
+          elsCount = await page.$$eval(selectorRowForParseReturns, els => els.length);
 
           if (elsCount) {
             console.log(`page ${i} elsCount ${elsCount}`);

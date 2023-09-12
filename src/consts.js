@@ -100,6 +100,21 @@ const fileInfoForReadFile = {
         skuColumnName: 'Артикул',
         formatters: {}
     },
+    'ozon product info': {
+        tagName: 'Лист1',
+        rowHeader: 1,
+        rowBeginProduct: 2,
+        columnsNames: [
+            'id',
+            'Конкурент 1 на озоне',
+            'Конкурент 2 на озоне',
+            'Конкурент 3 на озоне',
+            'Конкурент 4 на озоне',
+            'Конкурент 5 на озоне'
+        ],
+        skuColumnName:  'id',
+        formatters: {}
+    },
 };
 
 const templates = {

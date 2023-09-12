@@ -235,6 +235,7 @@ const ozonCalculatePrice = (assort) => {
 }
 
 module.exports = {
+    universalReadExcelFileNew,
     createUnionAssort,
     ymCalculateEff,
     ymCalculatePrice,

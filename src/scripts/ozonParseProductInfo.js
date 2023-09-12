@@ -42,7 +42,7 @@ const ozonParseProductInfo = async (linkObject) => {
                     }
 
                     if (successGoto) {
-                        linkObject[id][`Конкурент ${i + 1} на озоне_price`] = await gitPriceByLink(page)
+                        linkObject[id][`Конкурент ${i} на озоне цена`] = await gitPriceByLink(page)
                     }
 
                     await browser.close();
@@ -72,7 +72,7 @@ const gitPriceByLink = async (page) => {
     try {
 
         if (!(await checkExistance(page, selectors['price ozon without card']))) {
-            console.log(`not found ${selectors.price(i)}`);
+            console.log(`not found price ozon without card selector`);
         } else {
             let val = await page.$eval(selectors['price ozon without card'], el => el.innerText);
             val = val.replace('₽', '').replace(/\s/g, '').trim();
@@ -81,7 +81,7 @@ const gitPriceByLink = async (page) => {
 
         if (!price) {
             if (!(await checkExistance(page, selectors['ozon with card']))) {
-                console.log(`not found ${selectors.price(i)}`);
+                console.log(`not found ozon with card selector`);
             } else {
                 let val = await page.$eval(selectors['ozon with card'], el => el.innerText);
                 val = val.replace('₽', '').replace(/\s/g, '').trim();

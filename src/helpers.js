@@ -92,7 +92,7 @@ const writeRowsInExcel = async (headers, rows) => {
         // res.status(200).json({ data: rows });
 
         const workbook = new ExcelJS.Workbook();
-        const worksheet = workbook.addWorksheet('Ассортимент');
+        const worksheet = workbook.addWorksheet('Цены');
         const filePath = path.join(__dirname, '../result.xlsx');
 
         const headersArr = headers.map(el => (el.value ? el.value : el));
@@ -394,7 +394,8 @@ const calcMarkupYMAndWriteFile = async (content) => {
   
 const checkExistance = async (page, selector) => {
     try {
-        await page.waitForSelector(selector, {timeout: 1000});
+        await page.waitForSelector(selector);
+        // await page.waitForSelector(selector, {timeout: 1000});
     } catch(e) {}
     const elsCount = await page.$$eval(selector, els => els.length);
   

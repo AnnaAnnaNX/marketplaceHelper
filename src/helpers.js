@@ -394,7 +394,7 @@ const calcMarkupYMAndWriteFile = async (content) => {
   
 const checkExistance = async (page, selector) => {
     try {
-        await page.waitForSelector(selector);
+        await page.waitForSelector(selector, {timeout: 1000});
     } catch(e) {}
     const elsCount = await page.$$eval(selector, els => els.length);
   
